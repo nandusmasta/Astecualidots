@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/3D Starfields/Examples/Main.unity
+    guid: 9ea83b96916196249a56991a799f897f
+  - enabled: 1
+    path: Assets/3D Starfields/Examples/Background Starfield/BackgroundStarfieldExample.unity
+    guid: 9fc553392622baa47b618126cc16fbd0
+  - enabled: 1
+    path: Assets/3D Starfields/Examples/Infinite Starfield/InfiniteStarfieldExample.unity
+    guid: 9cced69788f0bef4d86f29de390082e6
+  - enabled: 1
+    path: Assets/3D Starfields/Examples/Starmap/StarmapExample.unity
+    guid: 07edcdabbd75cc643b993d9f19c5da68
