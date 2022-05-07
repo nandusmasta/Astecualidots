@@ -405,7 +405,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &982905126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -527,7 +527,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   score: 0
   lives: 0
-  maxSpeed: 1
+  horizontalEdges: {x: -215, y: 215}
+  verticalEdges: {x: -125, y: 125}
 --- !u!4 &2003252629
 Transform:
   m_ObjectHideFlags: 0
@@ -568,6 +569,7 @@ GameObject:
   - component: {fileID: 23649097313799180}
   - component: {fileID: 1510365140839360}
   - component: {fileID: 1510365140839359}
+  - component: {fileID: 1510365140839363}
   - component: {fileID: 1510365140839362}
   - component: {fileID: 1510365140839361}
   m_Layer: 0
@@ -589,7 +591,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b8f780965aa32540a984f866a8867ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direction: {x: 0, y: 0, z: 0}
+  rotation: 0
   speed: 0
 --- !u!114 &1510365140839360
 MonoBehaviour:
@@ -629,14 +631,36 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1510365140839358}
   serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0.1
+  m_Mass: 2
+  m_Drag: 0.2
   m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1510365140839363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1510365140839358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f464749332537948a5001f57c5785a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeed: 10
+  acceleration: 1
+  rotationAcceleration: 1000
+  maxRotationSpeed: 10000
+  Bullet: {fileID: 0}
+  Strength: 0
+  RateOfFire: 0
+  Duration: 0
+  WasFiring: 0
+  IsFiring: 0
 --- !u!4 &4433943398986118
 Transform:
   m_ObjectHideFlags: 0
@@ -645,7 +669,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1510365140839358}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3436452386960330256}

@@ -24,7 +24,8 @@ namespace Assets.ACS.Scripts
 
         public int score;
         public int lives;
-        public float maxSpeed;
+        public Vector2 horizontalEdges;
+        public Vector2 verticalEdges;
 
         #endregion
 

@@ -8,7 +8,7 @@ namespace Assets.ACS.Scripts.DataComponents
     public struct ACS_ShipMovementData : IComponentData
     {
 
-        public Vector3 direction;
+        public float rotation;
         public float speed;
 
     }
