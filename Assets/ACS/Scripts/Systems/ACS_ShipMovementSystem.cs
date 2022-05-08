@@ -2,6 +2,7 @@
 using Unity.Jobs;
 using Unity.Entities;
 using Assets.ACS.Scripts.DataComponents;
+using Assets.ACS.Scripts.Utils;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Physics;
@@ -22,13 +23,13 @@ namespace Assets.ACS.Scripts.Systems
             {
                 // Set linear velocity
                 float3 direction = math.mul(rotation.Value, new float3(0f, 0f, 1f));
-                physicsVelocity.Linear += direction * shipMovementData.speed * deltaTime;
+                physicsVelocity.Linear += ACS_Utils.ClampFloat3(direction * shipMovementData.speed * deltaTime, shipData.maxSpeed);
 
                 // Set angular velocity
                 float3 angularVelocity = new float3(0f, 1f, 0f) * math.radians(shipMovementData.rotation * deltaTime);
                 quaternion inertiaOrientationInWorldSpace = math.mul(rotation.Value, physicsMass.InertiaOrientation);
                 float3 angularVelocityInertiaSpace = math.rotate(math.inverse(inertiaOrientationInWorldSpace), angularVelocity);
-                physicsVelocity.Angular = angularVelocityInertiaSpace;
+                physicsVelocity.Angular += angularVelocityInertiaSpace;
 
                 // Keep the ship within the screen boundaries
                 float offset = 0.5f;
@@ -54,6 +55,14 @@ namespace Assets.ACS.Scripts.Systems
                         translation.Value.x = horizontalEdges.y - offset;
                     }
                 }
+
+                // Clamp velocitied
+                physicsVelocity.Linear = ACS_Utils.ClampFloat3(physicsVelocity.Linear, shipData.maxSpeed);
+                physicsVelocity.Angular = ACS_Utils.ClampFloat3(physicsVelocity.Angular, shipData.maxAngularSpeed);
+
+                // Makre sure no funny physics mess with the z plane
+                if (translation.Value.y != 0)
+                    translation.Value.y = 0;
 
             }).ScheduleParallel();
 
