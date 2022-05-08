@@ -578,15 +578,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 50
   acceleration: 1
-  rotationAcceleration: 1000
+  rotationAcceleration: 2000
   maxRotationSpeed: 10000
-  Bullet: {fileID: 5171902808841566084, guid: 8f01d254e0c11fc40836aa25d6101042, type: 3}
-  BulletStrength: 0
-  BulletDuration: 0
-  BulletSpeed: 200
-  RateOfFire: 0
-  WasFiring: 0
-  IsFiring: 0
+  Projectile: {fileID: 5171902808841566084, guid: 8f01d254e0c11fc40836aa25d6101042,
+    type: 3}
+  RateOfFire: 0.5
 --- !u!4 &4433943398986118
 Transform:
   m_ObjectHideFlags: 0
@@ -1544,7 +1540,7 @@ PrefabInstance:
     - target: {fileID: 5171902808841566084, guid: 8f01d254e0c11fc40836aa25d6101042,
         type: 3}
       propertyPath: m_Name
-      value: Bullet
+      value: Projectile
       objectReference: {fileID: 0}
     - target: {fileID: 5171902808841566084, guid: 8f01d254e0c11fc40836aa25d6101042,
         type: 3}

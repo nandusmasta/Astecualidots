@@ -13,14 +13,8 @@ namespace Assets.ACS.Scripts.DataComponents
         public float rotationAcceleration;
         public float maxRotationSpeed;
 
-        public Entity Bullet;
-        public float BulletStrength;
-        public float BulletDuration;
-        public float BulletSpeed;
+        public Entity Projectile;
         public float RateOfFire;
-
-        public int WasFiring;
-        public int IsFiring;
 
     }
 }
