@@ -22,6 +22,13 @@ namespace Assets.ACS.Scripts.DataComponents
                 return pieceToSpawnOnDestroy != null && piecesToSpawnOnDestroy > 0;
             }
         }
+        public bool IsDestroyed
+        {
+            get
+            {
+                return Health <= 0;
+            }
+        }
 
     }
 }

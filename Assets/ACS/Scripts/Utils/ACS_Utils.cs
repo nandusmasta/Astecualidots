@@ -15,6 +15,11 @@ namespace Assets.ACS.Scripts.Utils
             return UnityEngine.Random.Range(min, max);
         }
 
+        public static int GetRandomInt(int min, int max)
+        {
+            return UnityEngine.Random.Range(min, max);
+        }
+
         public static float3 ClampFloat3(float3 value, float normalizeLimit)
         {
             if (value.z > normalizeLimit)

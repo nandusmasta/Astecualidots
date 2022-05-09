@@ -508,6 +508,7 @@ GameObject:
   - component: {fileID: 2003252629}
   - component: {fileID: 2003252628}
   - component: {fileID: 2003252630}
+  - component: {fileID: 2003252631}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -527,6 +528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56c4b1121607f72419455d180af538dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxAsteroidsOnScreen: 15
   score: 0
   lives: 0
   horizontalEdges: {x: -215, y: 215}
@@ -558,6 +560,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
+--- !u!114 &2003252631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2003252627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae0ed608f3f562c4aab403d352899268, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LargeAsteroidPrefab: {fileID: 8571178044964522399, guid: 28f748714406b004483ff1cb9fa6860f,
+    type: 3}
+  MediumAsteroidPrefab: {fileID: 0}
+  SmallAsteroidPrefab: {fileID: 0}
+  SpawnedLargeAsteroids: 0
 --- !u!1 &1510365140839358
 GameObject:
   m_ObjectHideFlags: 0
@@ -813,7 +832,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f01d254e0c11fc40836aa25d6101042, type: 3}
---- !u!1001 &8572596822311196377
+--- !u!1001 &8528107488713616979
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -848,7 +867,7 @@ PrefabInstance:
     - target: {fileID: 8567786630076880437, guid: 28f748714406b004483ff1cb9fa6860f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.00000006953546
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8567786630076880437, guid: 28f748714406b004483ff1cb9fa6860f,
         type: 3}
@@ -858,7 +877,7 @@ PrefabInstance:
     - target: {fileID: 8567786630076880437, guid: 28f748714406b004483ff1cb9fa6860f,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8567786630076880437, guid: 28f748714406b004483ff1cb9fa6860f,
         type: 3}
@@ -880,10 +899,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LargeAsteroid1
       objectReference: {fileID: 0}
-    - target: {fileID: 8572596820591016710, guid: 28f748714406b004483ff1cb9fa6860f,
+    - target: {fileID: 8571178044964522399, guid: 28f748714406b004483ff1cb9fa6860f,
         type: 3}
-      propertyPath: isStatic
-      value: 1
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 28f748714406b004483ff1cb9fa6860f, type: 3}

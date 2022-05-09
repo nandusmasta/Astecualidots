@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Entities;
 
 namespace Assets.ACS.Scripts
 {
@@ -22,10 +23,15 @@ namespace Assets.ACS.Scripts
 
         #region Variables
 
+        public int maxAsteroidsOnScreen;
         public int score;
         public int lives;
         public Vector2 horizontalEdges;
         public Vector2 verticalEdges;
+
+        public Entity[] LargeAsteroidPrefabs;
+        public Entity[] MediumAsteroidPrefabs;
+        public Entity[] SmallAsteroidPrefabs;
 
         #endregion
 

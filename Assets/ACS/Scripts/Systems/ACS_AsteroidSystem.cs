@@ -4,6 +4,8 @@ using Assets.ACS.Scripts.Utils;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Physics;
+using Unity.Collections;
+using UnityEngine;
 
 namespace Assets.ACS.Scripts.Systems
 {
@@ -11,13 +13,17 @@ namespace Assets.ACS.Scripts.Systems
     {
 
         BeginInitializationEntityCommandBufferSystem ecbSystem;
+        Entity gameDataEntity;
 
         protected override void OnStartRunning()
         {
             base.OnStartRunning();
             ecbSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
 
-            Entities.ForEach((ref PhysicsVelocity physicsVelocity, in Rotation rotation, in ACS_AsteroidData asteroidData) =>
+            EntityQuery gameDataQuery = GetEntityQuery(typeof(ACS_GameData));
+            gameDataEntity = gameDataQuery.ToEntityArray(Allocator.Temp)[0];
+
+            /*Entities.ForEach((ref PhysicsVelocity physicsVelocity, in Rotation rotation, in ACS_AsteroidData asteroidData) =>
             {
                 if (asteroidData.isStatic)
                     return;
@@ -29,7 +35,7 @@ namespace Assets.ACS.Scripts.Systems
                 physicsVelocity.Linear += randomXZDirection * randomLinearInitialVelocity;
                 physicsVelocity.Angular = randomAngularInitialVelocity;
 
-            }).Run();
+            }).Run();*/
 
             CompleteDependency();
         }
@@ -38,9 +44,17 @@ namespace Assets.ACS.Scripts.Systems
         {
             float2 verticalEdges = ACS_GameManager.Instance.verticalEdges;
             float2 horizontalEdges = ACS_GameManager.Instance.horizontalEdges;
+            EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
 
-            Entities.ForEach((ref Translation translation, ref PhysicsVelocity physicsVelocity, in Rotation rotation, in ACS_AsteroidData asteroidData) =>
+            Entities.ForEach((ref Translation translation, ref PhysicsVelocity physicsVelocity, in Rotation rotation, in ACS_AsteroidData asteroidData, in Entity entity) =>
             {
+                // Destroy the asteroid if it's supposed to
+                /*if (asteroidData.IsDestroyed)
+                {
+                    entityCommandBuffer.DestroyEntity(entity);
+                    destroyedAsteroids++;
+                }*/
+
                 // Keep the asteroid  within the screen boundaries
                 float offset = 0.5f;
                 if (translation.Value.z > verticalEdges.y)
@@ -69,8 +83,8 @@ namespace Assets.ACS.Scripts.Systems
                 // Makre sure no funny physics mess with the z plane
                 if (translation.Value.y != 0)
                     translation.Value.y = 0;
-            }).ScheduleParallel();
-
+            }).Schedule();
+            
             CompleteDependency();
         }
     }

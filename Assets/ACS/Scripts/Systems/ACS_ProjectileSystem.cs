@@ -10,6 +10,7 @@ using Unity.Burst;
 
 namespace Assets.ACS.Scripts.Systems
 {
+
     public partial class ACS_ProjectileSystem : SystemBase
     {
         BeginInitializationEntityCommandBufferSystem ecbSystem;
@@ -30,22 +31,25 @@ namespace Assets.ACS.Scripts.Systems
             public void Execute(CollisionEvent collisionEvent)
             {
                 Debug.Log("Collision");
+                //entityCommandBuffer.DestroyEntity(collisionEvent.EntityA);
             }
         }
 
         protected override void OnUpdate()
         {
             float deltaTime = Time.DeltaTime;
-            EntityCommandBuffer ecb = ecbSystem.CreateCommandBuffer();
+            EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
             float2 verticalEdges = ACS_GameManager.Instance.verticalEdges;
             float2 horizontalEdges = ACS_GameManager.Instance.horizontalEdges;
+
+            CollisionWorld collisionWorld = buildPhysicsWorldSystem.PhysicsWorld.CollisionWorld;
 
             Entities.ForEach((ref Translation translation, ref ACS_ProjectileData projectileData, in Entity entity) =>
             {
                 projectileData.TimeSinceFired += deltaTime;
                 
                 if (projectileData.IsExpired)
-                    ecb.DestroyEntity(entity);
+                    entityCommandBuffer.DestroyEntity(entity);
                 else
                 {
                     // Keep the projectile within the screen boundaries
@@ -76,13 +80,12 @@ namespace Assets.ACS.Scripts.Systems
                     // Makre sure no funny physics mess with the z plane
                     if (translation.Value.y != 0)
                         translation.Value.y = 0;
+
                 }
             }).Schedule();
 
             CompleteDependency();
         }
-
-        
 
     }
 }
