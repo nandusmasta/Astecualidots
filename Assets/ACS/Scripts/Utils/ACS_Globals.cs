@@ -9,5 +9,6 @@ namespace Assets.ACS.Scripts.Utils
     public static class ACS_Globals
     {
         public static int SpawnedLargeAsteroids;
+        public static int Score;
     }
 }

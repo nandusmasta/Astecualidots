@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Collections;
 using UnityEngine;
+using Unity;
 
 namespace Assets.ACS.Scripts.Systems
 {
@@ -23,37 +24,21 @@ namespace Assets.ACS.Scripts.Systems
             EntityQuery gameDataQuery = GetEntityQuery(typeof(ACS_GameData));
             gameDataEntity = gameDataQuery.ToEntityArray(Allocator.Temp)[0];
 
-            /*Entities.ForEach((ref PhysicsVelocity physicsVelocity, in Rotation rotation, in ACS_AsteroidData asteroidData) =>
-            {
-                if (asteroidData.isStatic)
-                    return;
-                float randomLinearInitialVelocity = ACS_Utils.GetRandomFloat(asteroidData.MinMaxVelocityOnCreation.x, asteroidData.MinMaxVelocityOnCreation.y);
-                float3 randomAngularInitialVelocity = new float3(0f, 1f, 0f) * math.radians(ACS_Utils.GetRandomFloat(0, 360));
-
-                // Set linear and angular velocity
-                float3 randomXZDirection = new float3(ACS_Utils.GetRandomFloat(-5f, 5f), 0f, ACS_Utils.GetRandomFloat(-5f, 5f));
-                physicsVelocity.Linear += randomXZDirection * randomLinearInitialVelocity;
-                physicsVelocity.Angular = randomAngularInitialVelocity;
-
-            }).Run();*/
-
             CompleteDependency();
         }
 
         protected override void OnUpdate()
         {
-            float2 verticalEdges = ACS_GameManager.Instance.verticalEdges;
-            float2 horizontalEdges = ACS_GameManager.Instance.horizontalEdges;
+            float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
+            float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
             EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
+            Unity.Mathematics.Random random = new Unity.Mathematics.Random(56);
+
+            int score = ACS_GameManager.Instance.Score;
+            ComponentDataFromEntity<ACS_GameData> gameDataLookup = GetComponentDataFromEntity<ACS_GameData>(false);
 
             Entities.ForEach((ref Translation translation, ref PhysicsVelocity physicsVelocity, in Rotation rotation, in ACS_AsteroidData asteroidData, in Entity entity) =>
             {
-                // Destroy the asteroid if it's supposed to
-                /*if (asteroidData.IsDestroyed)
-                {
-                    entityCommandBuffer.DestroyEntity(entity);
-                    destroyedAsteroids++;
-                }*/
 
                 // Keep the asteroid  within the screen boundaries
                 float offset = 0.5f;
@@ -83,8 +68,50 @@ namespace Assets.ACS.Scripts.Systems
                 // Makre sure no funny physics mess with the z plane
                 if (translation.Value.y != 0)
                     translation.Value.y = 0;
+
+                // Destroy the asteroid if it's supposed to
+                if (asteroidData.IsDestroyed)
+                {
+                    entityCommandBuffer.DestroyEntity(entity);
+                    ACS_Globals.Score += asteroidData.ScoreWorth;
+
+                    // Control the number of asteroids on screen
+                    if (asteroidData.IsLarge)
+                    {
+                        ACS_Globals.SpawnedLargeAsteroids--;
+                        Debug.Log($"There are {ACS_Globals.SpawnedLargeAsteroids} spawned large asteroids now");
+                    }
+
+                    // Spawn little asteroids if required
+                    if (asteroidData.SpawnsPieceOnDestroy)
+                    {
+                        for (int i = 0; i < asteroidData.piecesToSpawnOnDestroy; i++)
+                        {
+                            Entity newAsteroidPiece = entityCommandBuffer.Instantiate(asteroidData.pieceToSpawnOnDestroy);
+
+                            // Random position
+                            float3 randomOffset = new float3(random.NextFloat(-8f, 8f), 0f, random.NextFloat(-8, 8f));
+                            Translation randomOffsetTranslation = new Translation { Value = translation.Value + randomOffset };
+                            entityCommandBuffer.SetComponent<Translation>(newAsteroidPiece, randomOffsetTranslation);
+
+                            // Random velocity
+                            float randomLinearInitialVelocity = random.NextFloat(asteroidData.MinMaxVelocityOnCreation.x, asteroidData.MinMaxVelocityOnCreation.y);
+                            float3 randomAngularInitialVelocity = new float3(0f, 1f, 0f) * math.radians(random.NextFloat(0, 360));
+                            float3 randomXZDirection = new float3(random.NextFloat(-5f, 5f), 0f, random.NextFloat(-5f, 5f));
+                            PhysicsVelocity newAsteroidPiecePhysicsVelocity = new PhysicsVelocity();
+                            newAsteroidPiecePhysicsVelocity.Angular = randomAngularInitialVelocity;
+                            newAsteroidPiecePhysicsVelocity.Linear = randomXZDirection * randomLinearInitialVelocity;
+                            entityCommandBuffer.SetComponent(newAsteroidPiece, newAsteroidPiecePhysicsVelocity);
+
+                            //Debug.Log($"Created asteroid with {newAsteroidPiecePhysicsVelocity.Linear} linear and {newAsteroidPiecePhysicsVelocity.Angular} angular velocity");
+                        }
+                    }
+                }
+
             }).Schedule();
-            
+
+            ACS_GameManager.Instance.Score = score;
+
             CompleteDependency();
         }
     }

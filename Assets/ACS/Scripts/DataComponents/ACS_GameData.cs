@@ -11,6 +11,7 @@ namespace Assets.ACS.Scripts.DataComponents
         public Entity LargeAsteroidPrefab;
         public Entity MediumAsteroidPrefab;
         public Entity SmallAsteroidPrefab;
+        public int SpawnedLargeAsteroids;
 
     }
 }

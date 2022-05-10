@@ -5,7 +5,7 @@ using Unity.Entities;
 
 namespace Assets.ACS.Scripts
 {
-    public class ACS_GameManager : ACS_Monobehaviour
+    public class ACS_GameManager : ACS_MonoBehaviour
     {
 
         #region Properties
@@ -23,11 +23,11 @@ namespace Assets.ACS.Scripts
 
         #region Variables
 
-        public int maxAsteroidsOnScreen;
-        public int score;
-        public int lives;
-        public Vector2 horizontalEdges;
-        public Vector2 verticalEdges;
+        public int MaxAsteroidsOnScreen;
+        public int Score;
+        public int Lives;
+        public Vector2 HorizontalEdges;
+        public Vector2 VerticalEdges;
 
         public Entity[] LargeAsteroidPrefabs;
         public Entity[] MediumAsteroidPrefabs;

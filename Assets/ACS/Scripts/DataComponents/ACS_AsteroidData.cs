@@ -14,6 +14,7 @@ namespace Assets.ACS.Scripts.DataComponents
         public Entity pieceToSpawnOnDestroy;
         public int piecesToSpawnOnDestroy;
         public float2 MinMaxVelocityOnCreation;
+        public int ScoreWorth;
 
         public bool SpawnsPieceOnDestroy
         {
@@ -27,6 +28,27 @@ namespace Assets.ACS.Scripts.DataComponents
             get
             {
                 return Health <= 0;
+            }
+        }
+        public bool IsLarge
+        {
+            get
+            {
+                return type == AsteroidType.Large;
+            }
+        }
+        public bool IsMedium
+        {
+            get
+            {
+                return type == AsteroidType.Medium;
+            }
+        }
+        public bool IsSmall
+        {
+            get
+            {
+                return type == AsteroidType.Small;
             }
         }
 

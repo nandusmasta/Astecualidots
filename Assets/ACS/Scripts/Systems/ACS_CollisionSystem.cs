@@ -18,9 +18,9 @@ namespace Assets.ACS.Scripts.Systems
     [UpdateBefore(typeof(EndFramePhysicsSystem))]
     public partial class ACS_CollisionSystem : SystemBase
     {
-        BeginInitializationEntityCommandBufferSystem ecbSystem;
-        BuildPhysicsWorld buildPhysicsWorldSystem;
-        StepPhysicsWorld stepPhysicsWorldSystem;
+        private BeginInitializationEntityCommandBufferSystem ecbSystem;
+        private BuildPhysicsWorld buildPhysicsWorldSystem;
+        private StepPhysicsWorld stepPhysicsWorldSystem;
 
         protected override void OnCreate()
         {
@@ -73,18 +73,11 @@ namespace Assets.ACS.Scripts.Systems
                     if (asteroidData.Health > 0)
                     {
                         asteroidData.Health -= projectileData.Damage;
-                        Debug.Log($"{projectileData.Damage} points of damage done to asteroid! It's destroyed status: {asteroidData.IsDestroyed}");
+                        //Debug.Log($"{projectileData.Damage} points of damage done to asteroid! It's destroyed status: {asteroidData.IsDestroyed}");
                         entityCommandBuffer.DestroyEntity(projectile);
                     }
                     entityCommandBuffer.SetComponent(asteroid, asteroidData);
 
-                    // Destroy the asteroid if it's supposed to
-                    if (asteroidData.IsDestroyed)
-                    {
-                        entityCommandBuffer.DestroyEntity(asteroid);
-                        ACS_Globals.SpawnedLargeAsteroids--;
-                        Debug.Log($"There are {ACS_Globals.SpawnedLargeAsteroids} spawned large asteroids now");
-                    }
                 }
 
                 //Debug.Log("Collision registered");

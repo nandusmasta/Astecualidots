@@ -15,21 +15,23 @@ namespace Assets.ACS.Scripts.Systems
         {
             float deltaTime = Time.DeltaTime;
             float3 rotationAxis = new float3(0f, 0f, 1f);
-            float2 verticalEdges = ACS_GameManager.Instance.verticalEdges;
-            float2 horizontalEdges = ACS_GameManager.Instance.horizontalEdges;
+            float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
+            float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
 
-            Entities.ForEach((ref PhysicsVelocity physicsVelocity, ref Rotation rotation, ref Translation translation, 
-                in ACS_ShipMovementData shipMovementData, in ACS_ShipData shipData, in PhysicsMass physicsMass) =>
+            Entities.ForEach((ref PhysicsVelocity physicsVelocity, ref Rotation rotation, ref Translation translation, ref ACS_ShipMovementData shipMovementData,
+                in ACS_ShipData shipData, in PhysicsMass physicsMass) =>
             {
                 // Set linear velocity
                 float3 direction = math.mul(rotation.Value, new float3(0f, 0f, 1f));
-                physicsVelocity.Linear += ACS_Utils.ClampFloat3(direction * shipMovementData.speed * deltaTime, shipData.maxSpeed);
+                physicsVelocity.Linear += ACS_Utils.ClampFloat3(direction * shipMovementData.VelocityForce * deltaTime, shipData.maxSpeed);
+                shipMovementData.VelocityForce = 0f;
 
                 // Set angular velocity
-                float3 angularVelocity = new float3(0f, 1f, 0f) * math.radians(shipMovementData.rotation * deltaTime);
+                float3 angularVelocity = new float3(0f, 1f, 0f) * math.radians(shipMovementData.RotationForce * deltaTime);
                 quaternion inertiaOrientationInWorldSpace = math.mul(rotation.Value, physicsMass.InertiaOrientation);
                 float3 angularVelocityInertiaSpace = math.rotate(math.inverse(inertiaOrientationInWorldSpace), angularVelocity);
                 physicsVelocity.Angular += angularVelocityInertiaSpace;
+                shipMovementData.RotationForce = 0f;
 
                 // Keep the ship within the screen boundaries
                 float offset = 0.5f;

@@ -20,16 +20,18 @@ namespace Assets.ACS.Scripts.Systems
             Entities.WithStructuralChanges().ForEach((ref ACS_ShipMovementData shipMovementData, in ACS_ShipInputData shipInputData, in ACS_ShipData shipData, in LocalToWorld shipTransform) =>
             {
                 // Facing
-                shipMovementData.rotation += Input.GetKey(shipInputData.turnLeftKey) ? -shipData.rotationAcceleration : 0f;
-                shipMovementData.rotation += Input.GetKey(shipInputData.turnRightKey) ? shipData.rotationAcceleration : 0f;
+                if (Input.GetKey(shipInputData.turnLeftKey))
+                    shipMovementData.RotationForce = -shipData.rotationAcceleration;
+                else
+                    if (Input.GetKey(shipInputData.turnRightKey))
+                        shipMovementData.RotationForce = shipData.rotationAcceleration;
 
                 // Speed
-                shipMovementData.speed += Input.GetKey(shipInputData.accelerateKey) ? shipData.acceleration : 0;
-                shipMovementData.speed += Input.GetKey(shipInputData.decelerateKey) ? -shipData.acceleration : 0;
-
-                // Clamping
-                shipMovementData.speed = Mathf.Clamp(shipMovementData.speed, -shipData.maxSpeed, shipData.maxSpeed);
-                shipMovementData.rotation = Mathf.Clamp(shipMovementData.rotation, -shipData.maxRotationSpeed, shipData.maxRotationSpeed);
+                if (Input.GetKey(shipInputData.accelerateKey))
+                    shipMovementData.VelocityForce = shipData.acceleration;
+                else
+                    if (Input.GetKey(shipInputData.decelerateKey))
+                        shipMovementData.VelocityForce = -shipData.acceleration;
 
                 // Shooting
                 bool isReloading = timeSinceLastShoot < shipData.RateOfFire;

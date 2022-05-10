@@ -21,16 +21,17 @@ namespace Assets.ACS.Scripts.Systems
 
         protected override void OnUpdate()
         {
-            int maxAsteroidsOnScreen = ACS_GameManager.Instance.maxAsteroidsOnScreen;
-            float2 verticalEdges = ACS_GameManager.Instance.verticalEdges;
-            float2 horizontalEdges = ACS_GameManager.Instance.horizontalEdges;
+            int maxAsteroidsOnScreen = ACS_GameManager.Instance.MaxAsteroidsOnScreen;
+            float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
+            float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
+            int spawnedLargeAsterois = ACS_Globals.SpawnedLargeAsteroids;
 
             Entities.ForEach((ref ACS_GameData gameData) =>
             {
-                if (ACS_Globals.SpawnedLargeAsteroids < maxAsteroidsOnScreen)
+                if (spawnedLargeAsterois < maxAsteroidsOnScreen)
                 {
-                    //int randomLargeAsteroidIndex = ACS_Utils.GetRandomInt(0, gameData.LargeAsteroidPrefabs.Length);
                     Entity newAsteroid = EntityManager.Instantiate(gameData.LargeAsteroidPrefab);
+                    UnityEngine.Debug.Log("Spawning new large asteroid");
 
                     // Get asteroid data
                     ComponentDataFromEntity<ACS_AsteroidData> asteroidDataFromEntity = GetComponentDataFromEntity<ACS_AsteroidData>(true);
@@ -51,9 +52,11 @@ namespace Assets.ACS.Scripts.Systems
                     physicsVelocity.Linear = randomXZDirection * randomLinearInitialVelocity;
                     EntityManager.SetComponentData(newAsteroid, physicsVelocity);
 
-                    ACS_Globals.SpawnedLargeAsteroids++;
+                    spawnedLargeAsterois++;
                 }
             });
+
+            ACS_Globals.SpawnedLargeAsteroids = spawnedLargeAsterois;
         }
     }
 }

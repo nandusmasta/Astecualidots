@@ -39,8 +39,8 @@ namespace Assets.ACS.Scripts.Systems
         {
             float deltaTime = Time.DeltaTime;
             EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
-            float2 verticalEdges = ACS_GameManager.Instance.verticalEdges;
-            float2 horizontalEdges = ACS_GameManager.Instance.horizontalEdges;
+            float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
+            float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
 
             CollisionWorld collisionWorld = buildPhysicsWorldSystem.PhysicsWorld.CollisionWorld;
 

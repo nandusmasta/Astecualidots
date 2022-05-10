@@ -2,7 +2,7 @@
 
 namespace Assets.ACS.Scripts
 {
-    public class ACS_Monobehaviour : MonoBehaviour
+    public class ACS_MonoBehaviour : MonoBehaviour
     {
 
     }
