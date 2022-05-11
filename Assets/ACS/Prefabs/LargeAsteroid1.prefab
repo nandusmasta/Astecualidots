@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46a269bcfb407e345bc5ef9376f572da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isStatic: 0
+  isStatic: 1
   Health: 300
   type: 0
   pieceToSpawnOnDestroy: {fileID: 6169801453817644333, guid: c8326d4125dbc0b40b41a00062255753,
@@ -136,6 +136,7 @@ MonoBehaviour:
     x: 5
     y: 10
   ScoreWorth: 50
+  Damage: 200
 --- !u!114 &-7391675350266232578
 MonoBehaviour:
   m_ObjectHideFlags: 0

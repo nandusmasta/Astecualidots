@@ -313,6 +313,7 @@ MonoBehaviour:
     x: 10
     y: 20
   ScoreWorth: 100
+  Damage: 100
 --- !u!114 &5846085285807468206
 MonoBehaviour:
   m_ObjectHideFlags: 0

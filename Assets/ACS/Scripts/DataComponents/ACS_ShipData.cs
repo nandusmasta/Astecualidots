@@ -15,6 +15,16 @@ namespace Assets.ACS.Scripts.DataComponents
 
         public Entity Projectile;
         public float RateOfFire;
+        public bool IsInvulnerable;
+        public int Score;
+
+        public bool IsDestroyed
+        {
+            get
+            {
+                return Health <= 0;
+            }
+        }
 
     }
 }

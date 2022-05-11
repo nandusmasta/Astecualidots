@@ -280,6 +280,7 @@ MonoBehaviour:
     x: 15
     y: 20
   ScoreWorth: 200
+  Damage: 50
 --- !u!1 &4689482858896717645
 GameObject:
   m_ObjectHideFlags: 0

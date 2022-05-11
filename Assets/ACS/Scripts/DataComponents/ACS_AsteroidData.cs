@@ -15,6 +15,7 @@ namespace Assets.ACS.Scripts.DataComponents
         public int piecesToSpawnOnDestroy;
         public float2 MinMaxVelocityOnCreation;
         public int ScoreWorth;
+        public int Damage;
 
         public bool SpawnsPieceOnDestroy
         {

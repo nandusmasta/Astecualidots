@@ -12,6 +12,7 @@ namespace Assets.ACS.Scripts.DataComponents
         public Entity MediumAsteroidPrefab;
         public Entity SmallAsteroidPrefab;
         public int SpawnedLargeAsteroids;
+        public bool IsGameOver;
 
     }
 }

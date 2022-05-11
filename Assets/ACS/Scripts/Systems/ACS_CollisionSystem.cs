@@ -30,7 +30,7 @@ namespace Assets.ACS.Scripts.Systems
 
             RequireForUpdate(GetEntityQuery(new EntityQueryDesc
             {
-                All = new ComponentType[] { typeof(ACS_ProjectileData) }
+                All = new ComponentType[] { typeof(PhysicsCollider) }
             }));
         }
 
@@ -38,6 +38,7 @@ namespace Assets.ACS.Scripts.Systems
         {
             [ReadOnly] public ComponentDataFromEntity<ACS_AsteroidData> asteroidDataCDFE;
             [ReadOnly] public ComponentDataFromEntity<ACS_ProjectileData> projectileDataCDFE;
+            [ReadOnly] public ComponentDataFromEntity<ACS_ShipData> shipDataCDFE;
             public EntityCommandBuffer entityCommandBuffer;
 
             public void Execute(CollisionEvent collisionEvent)
@@ -63,6 +64,13 @@ namespace Assets.ACS.Scripts.Systems
                     if (projectileDataCDFE.HasComponent(collisionEvent.EntityB))
                         projectile =  collisionEvent.EntityB;
 
+                Entity ship = Entity.Null;
+                if (shipDataCDFE.HasComponent(collisionEvent.EntityA))
+                    ship = collisionEvent.EntityA;
+                else
+                    if (shipDataCDFE.HasComponent(collisionEvent.EntityB))
+                    ship = collisionEvent.EntityB;
+
                 // Projectile on asteroid collision
                 if (projectile != Entity.Null && asteroid != Entity.Null)
                 {
@@ -78,6 +86,28 @@ namespace Assets.ACS.Scripts.Systems
                     }
                     entityCommandBuffer.SetComponent(asteroid, asteroidData);
 
+                }
+
+                // Asteroid on ship collision
+                if (asteroid != Entity.Null && ship != Entity.Null)
+                {
+                    ACS_AsteroidData asteroidData;
+                    asteroidDataCDFE.TryGetComponent(asteroid, out asteroidData);
+                    ACS_ShipData shipData;
+                    shipDataCDFE.TryGetComponent(ship, out shipData);
+                    if (shipData.Health > 0 && !shipData.IsInvulnerable)
+                    {
+                        shipData.Health -= asteroidData.Damage;
+                        entityCommandBuffer.SetComponent(ship, shipData);
+
+                        // Destroy ship if it has enough damage done to it
+                        if (shipData.IsDestroyed)
+                        {
+                            entityCommandBuffer.DestroyEntity(ship);
+                        }
+
+                        Debug.Log($"{asteroidData.Damage} points of damage done to the ship! It's destroyed status: {shipData.IsDestroyed}");
+                    }
                 }
 
                 //Debug.Log("Collision registered");
@@ -96,9 +126,12 @@ namespace Assets.ACS.Scripts.Systems
             Dependency = new CollisionEventJob {
                 asteroidDataCDFE = GetComponentDataFromEntity<ACS_AsteroidData>(true),
                 projectileDataCDFE = GetComponentDataFromEntity<ACS_ProjectileData>(true),
+                shipDataCDFE = GetComponentDataFromEntity<ACS_ShipData>(true),
                 entityCommandBuffer = ecbSystem.CreateCommandBuffer()
             }
             .Schedule(stepPhysicsWorldSystem.Simulation, Dependency);
+
+            CompleteDependency();
         }
     }
 }

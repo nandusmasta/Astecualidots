@@ -11,15 +11,26 @@ namespace Assets.ACS.Scripts.Systems
 {
     public partial class ACS_ShipMovementSystem : SystemBase
     {
+
+        BeginInitializationEntityCommandBufferSystem ecbSystem;
+
+        protected override void OnStartRunning()
+        {
+            base.OnStartRunning();
+            ecbSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
+            CompleteDependency();
+        }
+
         protected override void OnUpdate()
         {
             float deltaTime = Time.DeltaTime;
             float3 rotationAxis = new float3(0f, 0f, 1f);
             float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
             float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
+            EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
 
             Entities.ForEach((ref PhysicsVelocity physicsVelocity, ref Rotation rotation, ref Translation translation, ref ACS_ShipMovementData shipMovementData,
-                in ACS_ShipData shipData, in PhysicsMass physicsMass) =>
+                ref Entity entity, in ACS_ShipData shipData, in PhysicsMass physicsMass) =>
             {
                 // Set linear velocity
                 float3 direction = math.mul(rotation.Value, new float3(0f, 0f, 1f));
@@ -58,16 +69,16 @@ namespace Assets.ACS.Scripts.Systems
                     }
                 }
 
-                // Clamp velocitied
+                // Clamp velocities
                 physicsVelocity.Linear = ACS_Utils.ClampFloat3(physicsVelocity.Linear, shipData.maxSpeed);
                 physicsVelocity.Angular = ACS_Utils.ClampFloat3(physicsVelocity.Angular, shipData.maxAngularSpeed);
 
                 // Makre sure no funny physics mess with the z plane
                 if (translation.Value.y != 0)
                     translation.Value.y = 0;
+            }).Schedule();
 
-            }).ScheduleParallel();
-
+            CompleteDependency();
         }
 
     }

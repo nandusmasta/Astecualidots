@@ -13,8 +13,9 @@ namespace Assets.ACS.Scripts.Systems
     public partial class ACS_AsteroidSystem : SystemBase
     {
 
-        BeginInitializationEntityCommandBufferSystem ecbSystem;
-        Entity gameDataEntity;
+        private BeginInitializationEntityCommandBufferSystem ecbSystem;
+        private Entity gameDataEntity;
+        private Entity shipEntity;
 
         protected override void OnStartRunning()
         {
@@ -29,15 +30,18 @@ namespace Assets.ACS.Scripts.Systems
 
         protected override void OnUpdate()
         {
+            if (shipEntity == Entity.Null)
+            {
+                shipEntity = GetSingletonEntity<ACS_ShipData>();
+                return;
+            }
+
             float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
             float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
             EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
             Unity.Mathematics.Random random = new Unity.Mathematics.Random(56);
 
-            int score = ACS_GameManager.Instance.Score;
-            ComponentDataFromEntity<ACS_GameData> gameDataLookup = GetComponentDataFromEntity<ACS_GameData>(false);
-
-            Entities.ForEach((ref Translation translation, ref PhysicsVelocity physicsVelocity, in Rotation rotation, in ACS_AsteroidData asteroidData, in Entity entity) =>
+            Entities.WithoutBurst().ForEach((ref Translation translation, ref PhysicsVelocity physicsVelocity, in Rotation rotation, in ACS_AsteroidData asteroidData, in Entity entity) =>
             {
 
                 // Keep the asteroid  within the screen boundaries
@@ -73,7 +77,9 @@ namespace Assets.ACS.Scripts.Systems
                 if (asteroidData.IsDestroyed)
                 {
                     entityCommandBuffer.DestroyEntity(entity);
-                    ACS_Globals.Score += asteroidData.ScoreWorth;
+                    ACS_ShipData shipData = GetComponent<ACS_ShipData>(shipEntity);
+                    shipData.Score += asteroidData.ScoreWorth;
+                    entityCommandBuffer.SetComponent(shipEntity, shipData);
 
                     // Control the number of asteroids on screen
                     if (asteroidData.IsLarge)
@@ -108,9 +114,7 @@ namespace Assets.ACS.Scripts.Systems
                     }
                 }
 
-            }).Schedule();
-
-            ACS_GameManager.Instance.Score = score;
+            }).Run();
 
             CompleteDependency();
         }
