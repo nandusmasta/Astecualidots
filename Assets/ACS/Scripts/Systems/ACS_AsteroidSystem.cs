@@ -30,6 +30,8 @@ namespace Assets.ACS.Scripts.Systems
 
         protected override void OnUpdate()
         {
+            if (!ACS_Globals.HasGameStarted) return;
+
             if (shipEntity == Entity.Null)
             {
                 shipEntity = GetSingletonEntity<ACS_ShipData>();
@@ -76,10 +78,21 @@ namespace Assets.ACS.Scripts.Systems
                 // Destroy the asteroid if it's supposed to
                 if (asteroidData.IsDestroyed)
                 {
+                    // Spawn the explosion and destroy the entity
+                    if (asteroidData.HasExplosion)
+                    {
+                        Entity explosion = entityCommandBuffer.Instantiate(asteroidData.explosion);
+                        entityCommandBuffer.SetComponent<Translation>(explosion, EntityManager.GetComponentData<Translation>(entity));
+                    }
                     entityCommandBuffer.DestroyEntity(entity);
-                    ACS_ShipData shipData = GetComponent<ACS_ShipData>(shipEntity);
-                    shipData.Score += asteroidData.ScoreWorth;
-                    entityCommandBuffer.SetComponent(shipEntity, shipData);
+
+                    // Ship update
+                    if (EntityManager.Exists(shipEntity))
+                    {
+                        ACS_ShipData shipData = GetComponent<ACS_ShipData>(shipEntity);
+                        shipData.Score += asteroidData.ScoreWorth;
+                        entityCommandBuffer.SetComponent(shipEntity, shipData);
+                    }
 
                     // Control the number of asteroids on screen
                     if (asteroidData.IsLarge)

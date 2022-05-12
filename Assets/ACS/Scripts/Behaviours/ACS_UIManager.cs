@@ -28,6 +28,7 @@ namespace Assets.ACS.Scripts.Behaviours
         public void Awake()
         {
             EndGamePanel.gameObject.SetActive(false);
+            ACS_Globals.HasGameStarted = true;
         }
 
         public void ShowGameEndScreen(string score)
@@ -38,8 +39,24 @@ namespace Assets.ACS.Scripts.Behaviours
 
         public void Restart()
         {
-            World.DisposeAllWorlds();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+            ClearScene();
+            SceneManager.LoadScene("ACS_Game");
+        }
+
+        public void MainMenu()
+        {
+            ClearScene();
+            SceneManager.LoadScene("ACS_Menu");
+        }
+        private void ClearScene()
+        {
+            ACS_Globals.HasGameStarted = false;
+            ACS_Globals.SpawnedLargeAsteroids = 0;
+            EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            EntityQuery asteroidEntities = entityManager.CreateEntityQuery(typeof(ACS_AsteroidData), typeof(Collider));
+            entityManager.DestroyEntity(asteroidEntities);
+            ScriptBehaviourUpdateOrder.RemoveWorldFromCurrentPlayerLoop(World.DefaultGameObjectInjectionWorld);
+            DefaultWorldInitialization.Initialize("Default World", false);
         }
 
     }

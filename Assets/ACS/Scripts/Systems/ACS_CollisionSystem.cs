@@ -88,16 +88,38 @@ namespace Assets.ACS.Scripts.Systems
 
                 }
 
-                // Asteroid on ship collision
-                if (asteroid != Entity.Null && ship != Entity.Null)
+                // Ship collisions
+                if (ship != Entity.Null)
                 {
-                    ACS_AsteroidData asteroidData;
-                    asteroidDataCDFE.TryGetComponent(asteroid, out asteroidData);
                     ACS_ShipData shipData;
                     shipDataCDFE.TryGetComponent(ship, out shipData);
+                    int damage = 0;
+
+                    // Ship on asteroid collision
+                    if (asteroid != Entity.Null)
+                    {
+                        ACS_AsteroidData asteroidData;
+                        asteroidDataCDFE.TryGetComponent(asteroid, out asteroidData);
+                        damage = asteroidData.Damage;
+
+                        // Destroy the asteroid
+                        asteroidData.Health = 0;
+                        entityCommandBuffer.SetComponent<ACS_AsteroidData>(asteroid, asteroidData);
+                    }
+                    
+                    // Ship on projectile collision
+                    if (projectile != Entity.Null)
+                    {
+                        ACS_ProjectileData projectileData;
+                        projectileDataCDFE.TryGetComponent(projectile, out projectileData);
+                        damage = projectileData.Damage;
+                        entityCommandBuffer.DestroyEntity(projectile);
+                    }
+
+                    // Register ship damage
                     if (shipData.Health > 0 && !shipData.IsInvulnerable)
                     {
-                        shipData.Health -= asteroidData.Damage;
+                        shipData.Health -= damage;
                         entityCommandBuffer.SetComponent(ship, shipData);
 
                         // Destroy ship if it has enough damage done to it
@@ -105,8 +127,6 @@ namespace Assets.ACS.Scripts.Systems
                         {
                             entityCommandBuffer.DestroyEntity(ship);
                         }
-
-                        Debug.Log($"{asteroidData.Damage} points of damage done to the ship! It's destroyed status: {shipData.IsDestroyed}");
                     }
                 }
 

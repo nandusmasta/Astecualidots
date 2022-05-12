@@ -3,6 +3,7 @@ using Unity.Entities;
 using Assets.ACS.Scripts.DataComponents;
 using Unity.Physics;
 using Unity.Transforms;
+using Assets.ACS.Scripts.Utils;
 
 namespace Assets.ACS.Scripts.Systems
 {
@@ -15,9 +16,11 @@ namespace Assets.ACS.Scripts.Systems
 
         protected override void OnUpdate()
         {
+            if (!ACS_Globals.HasGameStarted) return;
             timeSinceLastShoot += Time.DeltaTime;
 
-            Entities.WithStructuralChanges().ForEach((ref ACS_ShipMovementData shipMovementData, in ACS_ShipInputData shipInputData, in ACS_ShipData shipData, in LocalToWorld shipTransform) =>
+            Entities.WithStructuralChanges().ForEach((ref ACS_ShipMovementData shipMovementData, in ACS_ShipInputData shipInputData, 
+                in ACS_ShipData shipData, in LocalToWorld shipTransform, in Rotation shipRotation) =>
             {
                 // Facing
                 if (Input.GetKey(shipInputData.turnLeftKey))
@@ -42,6 +45,7 @@ namespace Assets.ACS.Scripts.Systems
                     projectileData.TimeSinceFired = 0f;
                     Translation newProjectileTranslation = new Translation { Value = shipTransform.Position + (shipTransform.Forward * 8f)};
                     PhysicsVelocity newProjectilePhysicsVelocity = new PhysicsVelocity { Linear = shipTransform.Forward * projectileData.Speed };
+                    SetComponent(newProjectile, shipRotation);
                     SetComponent(newProjectile, newProjectileTranslation);
                     SetComponent(newProjectile, newProjectilePhysicsVelocity);
                     timeSinceLastShoot = 0f;

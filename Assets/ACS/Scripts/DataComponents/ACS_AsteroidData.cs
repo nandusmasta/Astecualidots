@@ -16,6 +16,7 @@ namespace Assets.ACS.Scripts.DataComponents
         public float2 MinMaxVelocityOnCreation;
         public int ScoreWorth;
         public int Damage;
+        public Entity explosion;
 
         public bool SpawnsPieceOnDestroy
         {
@@ -50,6 +51,14 @@ namespace Assets.ACS.Scripts.DataComponents
             get
             {
                 return type == AsteroidType.Small;
+            }
+        }
+
+        public bool HasExplosion
+        {
+            get
+            {
+                return explosion != Entity.Null;
             }
         }
 

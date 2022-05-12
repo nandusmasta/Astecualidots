@@ -6,14 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/3D Starfields/Examples/Main.unity
-    guid: 9ea83b96916196249a56991a799f897f
-  - enabled: 1
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
     path: Assets/3D Starfields/Examples/Background Starfield/BackgroundStarfieldExample.unity
     guid: 9fc553392622baa47b618126cc16fbd0
-  - enabled: 1
+  - enabled: 0
     path: Assets/3D Starfields/Examples/Infinite Starfield/InfiniteStarfieldExample.unity
     guid: 9cced69788f0bef4d86f29de390082e6
-  - enabled: 1
+  - enabled: 0
     path: Assets/3D Starfields/Examples/Starmap/StarmapExample.unity
     guid: 07edcdabbd75cc643b993d9f19c5da68
+  - enabled: 1
+    path: Assets/ACS/Scenes/ACS_Menu.unity
+    guid: 007a6ffb3ebbf144a81bcf5b943025c5
+  - enabled: 1
+    path: Assets/ACS/Scenes/ACS_Game.unity
+    guid: 38e17d28d0333c64ba09044526a2944b
+  m_configObjects: {}

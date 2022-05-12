@@ -21,6 +21,8 @@ namespace Assets.ACS.Scripts.Systems
 
         protected override void OnUpdate()
         {
+            if (!ACS_Globals.HasGameStarted) return;
+
             int maxAsteroidsOnScreen = ACS_GameManager.Instance.MaxAsteroidsOnScreen;
             float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
             float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;

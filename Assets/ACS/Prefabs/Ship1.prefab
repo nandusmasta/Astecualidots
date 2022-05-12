@@ -135,11 +135,12 @@ MonoBehaviour:
   acceleration: 50
   rotationAcceleration: 1000
   maxAngularSpeed: 1
-  Projectile: {fileID: 5171902808841566084, guid: 8f01d254e0c11fc40836aa25d6101042,
+  Projectile: {fileID: 5897344165903997236, guid: 1e0d58eda3880984c8da3016baa8f5b0,
     type: 3}
   RateOfFire: 0.25
   IsInvulnerable: 0
   Score: 0
+  HasTripleShoot: 0
 --- !u!54 &7961120124869229792
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -187,9 +188,9 @@ MonoBehaviour:
     y: 0
     z: 0
   m_PrimitiveSize:
-    x: 13
-    y: 13
-    z: 13
+    x: 10
+    y: 10
+    z: 10
   m_PrimitiveOrientation:
     Value:
       x: -0
@@ -197,15 +198,15 @@ MonoBehaviour:
       z: 0
     RotationOrder: 4
   m_Capsule:
-    Height: 13
-    Radius: 6.5
+    Height: 10
+    Radius: 5
     Axis: 2
   m_Cylinder:
-    Height: 13
-    Radius: 6.5
+    Height: 10
+    Radius: 5
     Axis: 2
   m_CylinderSideCount: 20
-  m_SphereRadius: 6.5
+  m_SphereRadius: 5
   m_MinimumSkinnedVertexWeight: 0.1
   m_ConvexHullGenerationParameters:
     m_SimplificationTolerance: 0.20458238

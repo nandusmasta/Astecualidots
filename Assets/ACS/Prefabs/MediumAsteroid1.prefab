@@ -115,7 +115,8 @@ MeshRenderer:
     firstSubMesh: 0
     subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
+  m_ProbeAnchor: {fileID: 4788791384662342886, guid: 14f33a309da328548a7d85a66b9c765a,
+    type: 3}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_ReceiveGI: 1
@@ -314,6 +315,8 @@ MonoBehaviour:
     y: 20
   ScoreWorth: 100
   Damage: 100
+  explosion: {fileID: 4788791384662081366, guid: 14f33a309da328548a7d85a66b9c765a,
+    type: 3}
 --- !u!114 &5846085285807468206
 MonoBehaviour:
   m_ObjectHideFlags: 0

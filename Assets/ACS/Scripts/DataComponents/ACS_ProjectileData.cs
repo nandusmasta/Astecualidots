@@ -7,7 +7,7 @@ namespace Assets.ACS.Scripts.DataComponents
     {
 
         public float Speed;
-        public float Damage;
+        public int Damage;
         public float TimeToLive;
         public float TimeSinceFired;
 

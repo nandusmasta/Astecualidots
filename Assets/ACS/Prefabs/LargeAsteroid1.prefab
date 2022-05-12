@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8571178044964522399}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 60}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -137,6 +137,8 @@ MonoBehaviour:
     y: 10
   ScoreWorth: 50
   Damage: 200
+  explosion: {fileID: 3925421406806573614, guid: 6e02ebcab62c60f438c70a700ce845a5,
+    type: 3}
 --- !u!114 &-7391675350266232578
 MonoBehaviour:
   m_ObjectHideFlags: 0

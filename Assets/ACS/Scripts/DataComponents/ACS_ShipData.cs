@@ -17,6 +17,7 @@ namespace Assets.ACS.Scripts.DataComponents
         public float RateOfFire;
         public bool IsInvulnerable;
         public int Score;
+        public bool HasTripleShoot;
 
         public bool IsDestroyed
         {

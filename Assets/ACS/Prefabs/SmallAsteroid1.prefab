@@ -281,6 +281,8 @@ MonoBehaviour:
     y: 20
   ScoreWorth: 200
   Damage: 50
+  explosion: {fileID: 1486669519784381228, guid: 9f9edb3bf2813b94c863a080c7ba0310,
+    type: 3}
 --- !u!1 &4689482858896717645
 GameObject:
   m_ObjectHideFlags: 0
