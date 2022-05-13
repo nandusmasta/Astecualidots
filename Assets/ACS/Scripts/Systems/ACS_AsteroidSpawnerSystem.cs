@@ -1,4 +1,9 @@
-﻿using Unity.Jobs;
+﻿/* 
+ * Project: Cualit DOTS Challenge.
+ * Author: Fernando Rey. May 2022.
+*/
+
+using Unity.Jobs;
 using Unity.Entities;
 using Assets.ACS.Scripts.Utils;
 using Assets.ACS.Scripts.DataComponents;
@@ -33,7 +38,7 @@ namespace Assets.ACS.Scripts.Systems
                 if (spawnedLargeAsterois < maxAsteroidsOnScreen)
                 {
                     Entity newAsteroid = EntityManager.Instantiate(gameData.LargeAsteroidPrefab);
-                    UnityEngine.Debug.Log("Spawning new large asteroid");
+                    UnityEngine.Debug.Log($"Spawning new large asteroid so we keep them at {maxAsteroidsOnScreen}");
 
                     // Get asteroid data
                     ComponentDataFromEntity<ACS_AsteroidData> asteroidDataFromEntity = GetComponentDataFromEntity<ACS_AsteroidData>(true);

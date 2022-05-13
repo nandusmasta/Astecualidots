@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿/* 
+ * Project: Cualit DOTS Challenge.
+ * Author: Fernando Rey. May 2022.
+*/
+
+using UnityEngine;
 using Assets.ACS.Scripts.DataComponents;
 using Assets.ACS.Scripts.Utils;
 using UnityEngine.UI;

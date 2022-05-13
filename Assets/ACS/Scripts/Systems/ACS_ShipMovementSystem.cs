@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/* 
+ * Project: Cualit DOTS Challenge.
+ * Author: Fernando Rey. May 2022.
+*/
+
 using Unity.Jobs;
 using Unity.Entities;
 using Assets.ACS.Scripts.DataComponents;
@@ -76,6 +80,8 @@ namespace Assets.ACS.Scripts.Systems
                 // Makre sure no funny physics mess with the z plane
                 if (translation.Value.y != 0)
                     translation.Value.y = 0;
+                rotation.Value.value.x = 0f;
+                rotation.Value.value.z = 0f;
             }).Schedule();
 
             CompleteDependency();

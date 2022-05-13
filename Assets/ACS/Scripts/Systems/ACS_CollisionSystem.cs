@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿/* 
+ * Project: Cualit DOTS Challenge.
+ * Author: Fernando Rey. May 2022.
+*/
+
 using Unity.Jobs;
 using Unity.Entities;
 using Assets.ACS.Scripts.DataComponents;
-using Unity.Transforms;
-using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
-using Unity.Burst;
 using Unity.Collections;
 using Assets.ACS.Scripts.Utils;
 
@@ -39,8 +40,8 @@ namespace Assets.ACS.Scripts.Systems
             [ReadOnly] public ComponentDataFromEntity<ACS_AsteroidData> asteroidDataCDFE;
             [ReadOnly] public ComponentDataFromEntity<ACS_ProjectileData> projectileDataCDFE;
             [ReadOnly] public ComponentDataFromEntity<ACS_ShipData> shipDataCDFE;
+            [ReadOnly] public ComponentDataFromEntity<ACS_PowerUpData> powerUpDataCDFE;
             public EntityCommandBuffer entityCommandBuffer;
-
             public void Execute(CollisionEvent collisionEvent)
             {
                 // Ignore asteroid on asteroid collisions
@@ -58,11 +59,14 @@ namespace Assets.ACS.Scripts.Systems
                         asteroid = collisionEvent.EntityB;
 
                 Entity projectile = Entity.Null;
+                Entity projectile2 = Entity.Null;
                 if (projectileDataCDFE.HasComponent(collisionEvent.EntityA)) 
                     projectile = collisionEvent.EntityA;
-                else
-                    if (projectileDataCDFE.HasComponent(collisionEvent.EntityB))
-                        projectile =  collisionEvent.EntityB;
+                if (projectileDataCDFE.HasComponent(collisionEvent.EntityB))
+                    if (projectile == Entity.Null)
+                        projectile = collisionEvent.EntityB;
+                    else
+                        projectile2 = Entity.Null;
 
                 Entity ship = Entity.Null;
                 if (shipDataCDFE.HasComponent(collisionEvent.EntityA))
@@ -70,6 +74,13 @@ namespace Assets.ACS.Scripts.Systems
                 else
                     if (shipDataCDFE.HasComponent(collisionEvent.EntityB))
                     ship = collisionEvent.EntityB;
+
+                Entity powerUp = Entity.Null;
+                if (powerUpDataCDFE.HasComponent(collisionEvent.EntityA))
+                    powerUp = collisionEvent.EntityA;
+                else
+                    if (powerUpDataCDFE.HasComponent(collisionEvent.EntityB))
+                    powerUp = collisionEvent.EntityB;
 
                 // Projectile on asteroid collision
                 if (projectile != Entity.Null && asteroid != Entity.Null)
@@ -116,6 +127,29 @@ namespace Assets.ACS.Scripts.Systems
                         entityCommandBuffer.DestroyEntity(projectile);
                     }
 
+                    // Ship on power up collision
+                    if (powerUp != Entity.Null)
+                    {
+                        ACS_PowerUpData powerUpData;
+                        powerUpDataCDFE.TryGetComponent(powerUp, out powerUpData);
+                        switch (powerUpData.type)
+                        {
+                            case ACS_PowerUpData.PowerUpType.RepairKit:
+                                shipData.Health = shipData.MaxHealth;
+                                entityCommandBuffer.SetComponent(ship, shipData);
+                                break;
+                            case ACS_PowerUpData.PowerUpType.MegaBomb:
+                                ACS_Globals.HasFiredMegaBomb = true;
+                                break;
+                            case ACS_PowerUpData.PowerUpType.Invulnerability:
+                                shipData.IsInvulnerable = true;
+                                shipData.TimeSinceInvulnerable = 0f;
+                                entityCommandBuffer.SetComponent(ship, shipData);
+                                break;
+                        }
+                        entityCommandBuffer.DestroyEntity(powerUp);
+                    }
+
                     // Register ship damage
                     if (shipData.Health > 0 && !shipData.IsInvulnerable)
                     {
@@ -128,6 +162,13 @@ namespace Assets.ACS.Scripts.Systems
                             entityCommandBuffer.DestroyEntity(ship);
                         }
                     }
+                }
+
+                // Projectile on projectile collision
+                if (projectile != Entity.Null && projectile2 != Entity.Null)
+                {
+                    entityCommandBuffer.DestroyEntity(projectile);
+                    entityCommandBuffer.DestroyEntity(projectile2);
                 }
 
                 //Debug.Log("Collision registered");
@@ -147,6 +188,7 @@ namespace Assets.ACS.Scripts.Systems
                 asteroidDataCDFE = GetComponentDataFromEntity<ACS_AsteroidData>(true),
                 projectileDataCDFE = GetComponentDataFromEntity<ACS_ProjectileData>(true),
                 shipDataCDFE = GetComponentDataFromEntity<ACS_ShipData>(true),
+                powerUpDataCDFE = GetComponentDataFromEntity<ACS_PowerUpData>(true),
                 entityCommandBuffer = ecbSystem.CreateCommandBuffer()
             }
             .Schedule(stepPhysicsWorldSystem.Simulation, Dependency);

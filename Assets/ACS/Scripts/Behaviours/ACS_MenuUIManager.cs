@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/* 
+ * Project: Cualit DOTS Challenge.
+ * Author: Fernando Rey. May 2022.
+*/
+
 using UnityEngine.SceneManagement;
 
 namespace Assets.ACS.Scripts.Behaviours

@@ -7,20 +7,21 @@ using Unity.Entities;
 
 namespace Assets.ACS.Scripts.DataComponents
 {
+
     [GenerateAuthoringComponent]
-    public struct ACS_ProjectileData : IComponentData
+    public struct ACS_PowerUpData : IComponentData
     {
 
-        public float Speed;
-        public int Damage;
+        public enum PowerUpType { Invulnerability, MegaBomb, RepairKit };
+        public PowerUpType type;
         public float TimeToLive;
-        public float TimeSinceFired;
+        public float TimeSinceSpawned;
 
         public bool IsExpired
         {
             get
             {
-                return TimeSinceFired > TimeToLive;
+                return TimeSinceSpawned > TimeToLive;
             }
         }
 

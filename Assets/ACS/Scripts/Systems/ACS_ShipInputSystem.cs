@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿/* 
+ * Project: Cualit DOTS Challenge.
+ * Author: Fernando Rey. May 2022.
+*/
+
+using UnityEngine;
 using Unity.Entities;
 using Assets.ACS.Scripts.DataComponents;
 using Unity.Physics;
@@ -18,9 +23,10 @@ namespace Assets.ACS.Scripts.Systems
         {
             if (!ACS_Globals.HasGameStarted) return;
             timeSinceLastShoot += Time.DeltaTime;
+            float deltaTime = Time.DeltaTime;
 
-            Entities.WithStructuralChanges().ForEach((ref ACS_ShipMovementData shipMovementData, in ACS_ShipInputData shipInputData, 
-                in ACS_ShipData shipData, in LocalToWorld shipTransform, in Rotation shipRotation) =>
+            Entities.WithStructuralChanges().ForEach((ref ACS_ShipMovementData shipMovementData, ref ACS_ShipData shipData, 
+                in ACS_ShipInputData shipInputData, in LocalToWorld shipTransform, in Rotation shipRotation) =>
             {
                 // Facing
                 if (Input.GetKey(shipInputData.turnLeftKey))
@@ -51,6 +57,16 @@ namespace Assets.ACS.Scripts.Systems
                     timeSinceLastShoot = 0f;
                 }
 
+                // Invulnerability
+                if (shipData.IsInvulnerable)
+                {
+                    shipData.TimeSinceInvulnerable += deltaTime;
+                    if (shipData.HasInvulnerabilityExpired)
+                    {
+                        shipData.IsInvulnerable = false;
+                        shipData.TimeSinceInvulnerable = 0f;
+                    }
+                }
             }).Run();
         }
     }

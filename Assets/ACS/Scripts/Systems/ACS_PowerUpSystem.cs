@@ -3,60 +3,41 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using UnityEngine;
-using Unity.Jobs;
 using Unity.Entities;
 using Assets.ACS.Scripts.DataComponents;
 using Unity.Transforms;
 using Unity.Mathematics;
-using Unity.Physics;
-using Unity.Physics.Systems;
-using Unity.Burst;
+using Assets.ACS.Scripts.Utils;
 
 namespace Assets.ACS.Scripts.Systems
 {
-
-    public partial class ACS_ProjectileSystem : SystemBase
+    public partial class ACS_PowerUpSystem : SystemBase
     {
-        BeginInitializationEntityCommandBufferSystem ecbSystem;
 
-        BuildPhysicsWorld buildPhysicsWorldSystem;
-        StepPhysicsWorld stepPhysicsWorldSystem;
+        BeginInitializationEntityCommandBufferSystem ecbSystem;
 
         protected override void OnCreate()
         {
             ecbSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
-            buildPhysicsWorldSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>();
-            stepPhysicsWorldSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<StepPhysicsWorld>();
-        }
-
-        [BurstCompile]
-        private struct CollisionEventJob : ICollisionEventsJob
-        {
-            public void Execute(CollisionEvent collisionEvent)
-            {
-                Debug.Log("Collision");
-                //entityCommandBuffer.DestroyEntity(collisionEvent.EntityA);
-            }
         }
 
         protected override void OnUpdate()
         {
+            if (!ACS_Globals.HasGameStarted) return;
             float deltaTime = Time.DeltaTime;
-            EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
             float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
             float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
-            CollisionWorld collisionWorld = buildPhysicsWorldSystem.PhysicsWorld.CollisionWorld;
+            EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
 
-            Entities.ForEach((ref Translation translation, ref ACS_ProjectileData projectileData, in Entity entity) =>
+            Entities.ForEach((ref ACS_PowerUpData powerUpData, ref Translation translation, in Entity powerUp) =>
             {
-                projectileData.TimeSinceFired += deltaTime;
-                
-                if (projectileData.IsExpired)
-                    entityCommandBuffer.DestroyEntity(entity);
+                powerUpData.TimeSinceSpawned += deltaTime;
+
+                if (powerUpData.IsExpired)
+                    entityCommandBuffer.DestroyEntity(powerUp);
                 else
                 {
-                    // Keep the projectile within the screen boundaries
+                    // Keep the asteroid  within the screen boundaries
                     float offset = 0.5f;
                     if (translation.Value.z > verticalEdges.y)
                     {
@@ -84,12 +65,8 @@ namespace Assets.ACS.Scripts.Systems
                     // Makre sure no funny physics mess with the z plane
                     if (translation.Value.y != 0)
                         translation.Value.y = 0;
-
                 }
             }).Schedule();
-
-            CompleteDependency();
         }
-
     }
 }

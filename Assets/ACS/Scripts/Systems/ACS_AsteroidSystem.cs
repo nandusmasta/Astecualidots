@@ -1,12 +1,15 @@
-﻿using Unity.Entities;
+﻿/* 
+ * Project: Cualit DOTS Challenge.
+ * Author: Fernando Rey. May 2022.
+*/
+
+using Unity.Entities;
 using Assets.ACS.Scripts.DataComponents;
 using Assets.ACS.Scripts.Utils;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Collections;
-using UnityEngine;
-using Unity;
 
 namespace Assets.ACS.Scripts.Systems
 {
@@ -43,7 +46,7 @@ namespace Assets.ACS.Scripts.Systems
             EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
             Unity.Mathematics.Random random = new Unity.Mathematics.Random(56);
 
-            Entities.WithoutBurst().ForEach((ref Translation translation, ref PhysicsVelocity physicsVelocity, in Rotation rotation, in ACS_AsteroidData asteroidData, in Entity entity) =>
+            Entities.WithoutBurst().ForEach((ref Translation translation, ref PhysicsVelocity physicsVelocity, ref ACS_AsteroidData asteroidData,in Rotation rotation, in Entity entity) =>
             {
 
                 // Keep the asteroid  within the screen boundaries
@@ -75,6 +78,12 @@ namespace Assets.ACS.Scripts.Systems
                 if (translation.Value.y != 0)
                     translation.Value.y = 0;
 
+                // Fire the megabomb!
+                if (ACS_Globals.HasFiredMegaBomb)
+                {
+                    asteroidData.Health = 0;
+                }
+
                 // Destroy the asteroid if it's supposed to
                 if (asteroidData.IsDestroyed)
                 {
@@ -98,7 +107,7 @@ namespace Assets.ACS.Scripts.Systems
                     if (asteroidData.IsLarge)
                     {
                         ACS_Globals.SpawnedLargeAsteroids--;
-                        Debug.Log($"There are {ACS_Globals.SpawnedLargeAsteroids} spawned large asteroids now");
+                        //Debug.Log($"There are {ACS_Globals.SpawnedLargeAsteroids} spawned large asteroids now");
                     }
 
                     // Spawn little asteroids if required
@@ -128,6 +137,8 @@ namespace Assets.ACS.Scripts.Systems
                 }
 
             }).Run();
+
+            ACS_Globals.HasFiredMegaBomb = false;
 
             CompleteDependency();
         }

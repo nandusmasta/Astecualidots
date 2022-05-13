@@ -1,5 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+/* 
+ * Project: Cualit DOTS Challenge.
+ * Author: Fernando Rey. May 2022.
+*/
+
 using UnityEngine;
 using Unity.Entities;
 

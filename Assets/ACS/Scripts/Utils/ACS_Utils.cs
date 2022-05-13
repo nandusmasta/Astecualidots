@@ -1,10 +1,16 @@
-﻿using UnityEngine;
+﻿/* 
+ * Project: Cualit DOTS Challenge.
+ * Author: Fernando Rey. May 2022.
+*/
+
 using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace Assets.ACS.Scripts.Utils
 {
     public static class ACS_Utils
     {
+
         public static float GetRandomFloat()
         {
             return UnityEngine.Random.Range(float.MinValue, float.MaxValue);

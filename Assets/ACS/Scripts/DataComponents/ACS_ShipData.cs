@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/* 
+ * Project: Cualit DOTS Challenge.
+ * Author: Fernando Rey. May 2022.
+*/
+
 using Unity.Entities;
 
 namespace Assets.ACS.Scripts.DataComponents
@@ -18,12 +22,21 @@ namespace Assets.ACS.Scripts.DataComponents
         public bool IsInvulnerable;
         public int Score;
         public bool HasTripleShoot;
-
+        public float MaxHealth;
+        public float InvulnerabilityDuration;
+        public float TimeSinceInvulnerable;
         public bool IsDestroyed
         {
             get
             {
                 return Health <= 0;
+            }
+        }
+        public bool HasInvulnerabilityExpired
+        {
+            get
+            {
+                return TimeSinceInvulnerable >= InvulnerabilityDuration;
             }
         }
 
