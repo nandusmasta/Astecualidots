@@ -3,25 +3,32 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using UnityEngine;
-using Unity.Jobs;
-using Unity.Entities;
-using Assets.ACS.Scripts.DataComponents;
-using Unity.Transforms;
-using Unity.Mathematics;
-using Unity.Physics;
-using Unity.Physics.Systems;
-using Unity.Burst;
-
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.DataComponents;
+    using Assets.ACS.Scripts.Utils;
+    using Unity.Burst;
+    using Unity.Entities;
+    using Unity.Jobs;
+    using Unity.Mathematics;
+    using Unity.Physics;
+    using Unity.Physics.Systems;
+    using Unity.Transforms;
+    using UnityEngine;
 
     public partial class ACS_ProjectileSystem : SystemBase
     {
-        BeginInitializationEntityCommandBufferSystem ecbSystem;
+        #region Fields
 
-        BuildPhysicsWorld buildPhysicsWorldSystem;
-        StepPhysicsWorld stepPhysicsWorldSystem;
+        internal BuildPhysicsWorld buildPhysicsWorldSystem;
+
+        internal BeginInitializationEntityCommandBufferSystem ecbSystem;
+
+        internal StepPhysicsWorld stepPhysicsWorldSystem;
+
+        #endregion
+
+        #region Methods
 
         protected override void OnCreate()
         {
@@ -30,28 +37,18 @@ namespace Assets.ACS.Scripts.Systems
             stepPhysicsWorldSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<StepPhysicsWorld>();
         }
 
-        [BurstCompile]
-        private struct CollisionEventJob : ICollisionEventsJob
-        {
-            public void Execute(CollisionEvent collisionEvent)
-            {
-                Debug.Log("Collision");
-                //entityCommandBuffer.DestroyEntity(collisionEvent.EntityA);
-            }
-        }
-
         protected override void OnUpdate()
         {
             float deltaTime = Time.DeltaTime;
             EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
-            float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
-            float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
+            float2 verticalEdges = ACS_Globals.VerticalEdges;
+            float2 horizontalEdges = ACS_Globals.HorizontalEdges;
             CollisionWorld collisionWorld = buildPhysicsWorldSystem.PhysicsWorld.CollisionWorld;
 
             Entities.ForEach((ref Translation translation, ref ACS_ProjectileData projectileData, in Entity entity) =>
             {
                 projectileData.TimeSinceFired += deltaTime;
-                
+
                 if (projectileData.IsExpired)
                     entityCommandBuffer.DestroyEntity(entity);
                 else
@@ -90,6 +87,8 @@ namespace Assets.ACS.Scripts.Systems
 
             CompleteDependency();
         }
+
+        #endregion
 
     }
 }

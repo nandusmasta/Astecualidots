@@ -9618,6 +9618,7 @@ GameObject:
   - component: {fileID: 4788791384662659114}
   - component: {fileID: 4788791384668067234}
   - component: {fileID: 8381299976994508293}
+  - component: {fileID: -5209328719215916405}
   m_Layer: 0
   m_Name: Explosion_MediumAsteroid
   m_TagString: Untagged
@@ -14498,3 +14499,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
+--- !u!114 &-5209328719215916405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4788791384662081366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 351e07762ed383b4f81d36044685df3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeSinceFired: 0
+  TimeToLive: 2

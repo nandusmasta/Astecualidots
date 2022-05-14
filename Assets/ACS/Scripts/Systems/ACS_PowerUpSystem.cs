@@ -3,18 +3,23 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using Unity.Entities;
-using Assets.ACS.Scripts.DataComponents;
-using Unity.Transforms;
-using Unity.Mathematics;
-using Assets.ACS.Scripts.Utils;
-
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.DataComponents;
+    using Assets.ACS.Scripts.Utils;
+    using Unity.Entities;
+    using Unity.Mathematics;
+    using Unity.Transforms;
+
     public partial class ACS_PowerUpSystem : SystemBase
     {
+        #region Fields
 
-        BeginInitializationEntityCommandBufferSystem ecbSystem;
+        internal BeginInitializationEntityCommandBufferSystem ecbSystem;
+
+        #endregion
+
+        #region Methods
 
         protected override void OnCreate()
         {
@@ -23,10 +28,9 @@ namespace Assets.ACS.Scripts.Systems
 
         protected override void OnUpdate()
         {
-            if (!ACS_Globals.HasGameStarted) return;
             float deltaTime = Time.DeltaTime;
-            float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
-            float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
+            float2 verticalEdges = ACS_Globals.VerticalEdges;
+            float2 horizontalEdges = ACS_Globals.HorizontalEdges;
             EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
 
             Entities.ForEach((ref ACS_PowerUpData powerUpData, ref Translation translation, in Entity powerUp) =>
@@ -37,7 +41,7 @@ namespace Assets.ACS.Scripts.Systems
                     entityCommandBuffer.DestroyEntity(powerUp);
                 else
                 {
-                    // Keep the asteroid  within the screen boundaries
+                    // Keep the power up within the screen boundaries
                     float offset = 0.5f;
                     if (translation.Value.z > verticalEdges.y)
                     {
@@ -68,5 +72,7 @@ namespace Assets.ACS.Scripts.Systems
                 }
             }).Schedule();
         }
+
+        #endregion
     }
 }

@@ -8,21 +8,13 @@ namespace Assets.ACS.Scripts.DataComponents
     using Unity.Entities;
 
     [GenerateAuthoringComponent]
-    public struct ACS_PowerUpData : IComponentData
+    public struct ACS_ExplosionData : IComponentData
     {
         #region Fields
 
-        public float TimeSinceSpawned;
+        public float TimeSinceFired;
 
         public float TimeToLive;
-
-        public PowerUpType type;
-
-        #endregion
-
-        #region Enums
-
-        public enum PowerUpType { Invulnerability, MegaBomb, RepairKit, MultiShoot };
 
         #endregion
 
@@ -32,7 +24,7 @@ namespace Assets.ACS.Scripts.DataComponents
         {
             get
             {
-                return TimeSinceSpawned > TimeToLive;
+                return TimeSinceFired > TimeToLive;
             }
         }
 

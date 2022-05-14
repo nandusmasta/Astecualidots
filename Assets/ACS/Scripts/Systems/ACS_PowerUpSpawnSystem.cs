@@ -3,29 +3,38 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using Unity.Entities;
-using Unity.Mathematics;
-using Assets.ACS.Scripts.Utils;
-using static Assets.ACS.Scripts.DataComponents.ACS_PowerUpData;
-using System;
-using Assets.ACS.Scripts.DataComponents;
-using Unity.Collections;
-using Unity.Transforms;
-using Unity.Physics;
-using UnityEngine;
-
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.DataComponents;
+    using Assets.ACS.Scripts.Utils;
+    using System;
+    using Unity.Collections;
+    using Unity.Entities;
+    using Unity.Mathematics;
+    using Unity.Physics;
+    using Unity.Transforms;
+    using UnityEngine;
+    using static Assets.ACS.Scripts.DataComponents.ACS_PowerUpData;
+
     public partial class ACS_PowerUpSpawnSystem : SystemBase
     {
+        #region Fields
 
-        private int2 MinimumSecondsBetweenPowerups = new int2 { x = 5, y = 10 };
-        private Unity.Mathematics.Random random;
-        private PowerUpType nextPowerUpType = PowerUpType.RepairKit;
-        private float timeToNextPowerUp;
-        private float timeSinceLastPowerUp;
-        private Entity gameDataEntity;
         private ACS_GameData gameData;
+
+        private Entity gameDataEntity;
+
+        private PowerUpType nextPowerUpType = PowerUpType.RepairKit;
+
+        private Unity.Mathematics.Random random;
+
+        private float timeSinceLastPowerUp;
+
+        private float timeToNextPowerUp;
+
+        #endregion
+
+        #region Methods
 
         protected override void OnCreate()
         {
@@ -40,7 +49,9 @@ namespace Assets.ACS.Scripts.Systems
             if (gameDataEntity == Entity.Null)
             {
                 EntityQuery gameDataQuery = GetEntityQuery(typeof(ACS_GameData));
-                gameDataEntity = gameDataQuery.ToEntityArray(Allocator.Temp)[0];
+                NativeArray<Entity> entityArray = gameDataQuery.ToEntityArray(Allocator.Temp);
+                if (entityArray.Length > 0)
+                    gameDataEntity = entityArray[0];
                 if (gameDataEntity != Entity.Null)
                     gameData = EntityManager.GetComponentData<ACS_GameData>(gameDataEntity);
             }
@@ -54,15 +65,6 @@ namespace Assets.ACS.Scripts.Systems
             timeSinceLastPowerUp += Time.DeltaTime;
         }
 
-        private void updateNextPowerUpType()
-        {
-            Array powerUpTypes = typeof(PowerUpType).GetEnumValues();
-            int randomInt = random.NextInt(0, powerUpTypes.Length);
-            nextPowerUpType = (PowerUpType)powerUpTypes.GetValue(randomInt);
-            timeSinceLastPowerUp = 0f;
-            timeToNextPowerUp = random.NextInt(MinimumSecondsBetweenPowerups.x, MinimumSecondsBetweenPowerups.y);
-        }
-
         private void spawnNextPowerUp()
         {
             Entity newPowerUp = Entity.Null;
@@ -71,10 +73,11 @@ namespace Assets.ACS.Scripts.Systems
                 case PowerUpType.Invulnerability: newPowerUp = EntityManager.Instantiate(gameData.InvulnerabilityPowerUp); break;
                 case PowerUpType.RepairKit: newPowerUp = EntityManager.Instantiate(gameData.RepairKitPowerUp); break;
                 case PowerUpType.MegaBomb: newPowerUp = EntityManager.Instantiate(gameData.MegaBombPowerUp); break;
+                case PowerUpType.MultiShoot: newPowerUp = EntityManager.Instantiate(gameData.TripleShootPowerUp); break;
             }
 
-            float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
-            float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
+            float2 verticalEdges = ACS_Globals.VerticalEdges;
+            float2 horizontalEdges = ACS_Globals.HorizontalEdges;
 
             // Set position
             float newPowerUpPositionX = random.NextFloat(0f, horizontalEdges.x);
@@ -89,12 +92,22 @@ namespace Assets.ACS.Scripts.Systems
             physicsVelocity.Linear = randomXZDirection * randomLinearInitialVelocity;
             EntityManager.SetComponentData(newPowerUp, physicsVelocity);
 
-            Rotation newRotation;
-            newRotation.Value = Quaternion.AngleAxis(90f, Vector3.right);
+            // Set rotation
+            Rotation newRotation = new Rotation { Value = Quaternion.AngleAxis(90f, Vector3.right) };
             EntityManager.SetComponentData(newPowerUp, newRotation);
 
-            UnityEngine.Debug.Log($"Spawning the {nextPowerUpType.ToString()} power up, after waiting {timeToNextPowerUp} seconds");
+            //UnityEngine.Debug.Log($"Spawning the {nextPowerUpType.ToString()} power up, after waiting {timeToNextPowerUp} seconds");
         }
 
+        private void updateNextPowerUpType()
+        {
+            Array powerUpTypes = typeof(PowerUpType).GetEnumValues();
+            int randomInt = random.NextInt(0, powerUpTypes.Length);
+            nextPowerUpType = (PowerUpType)powerUpTypes.GetValue(randomInt);
+            timeSinceLastPowerUp = 0f;
+            timeToNextPowerUp = random.NextInt(ACS_Globals.MinimumSecondsBetweenPowerups.x, ACS_Globals.MinimumSecondsBetweenPowerups.y);
+        }
+
+        #endregion
     }
 }

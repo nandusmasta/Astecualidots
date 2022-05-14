@@ -3,21 +3,24 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using Unity.Jobs;
-using Unity.Entities;
-using Assets.ACS.Scripts.Utils;
-using Assets.ACS.Scripts.DataComponents;
-using Unity.Transforms;
-using Unity.Mathematics;
-using Unity.Physics;
-using Unity.Physics.Systems;
-using Unity.Burst;
-
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.DataComponents;
+    using Assets.ACS.Scripts.Utils;
+    using Unity.Entities;
+    using Unity.Mathematics;
+    using Unity.Physics;
+    using Unity.Transforms;
+
     public partial class ACS_AsteroidSpawnerSystem : ComponentSystem
     {
+        #region Fields
+
         private Random random;
+
+        #endregion
+
+        #region Methods
 
         protected override void OnCreate()
         {
@@ -28,9 +31,9 @@ namespace Assets.ACS.Scripts.Systems
         {
             if (!ACS_Globals.HasGameStarted) return;
 
-            int maxAsteroidsOnScreen = ACS_GameManager.Instance.MaxAsteroidsOnScreen;
-            float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
-            float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
+            int maxAsteroidsOnScreen = ACS_Globals.MaxAsteroidsOnScreen;
+            float2 verticalEdges = ACS_Globals.VerticalEdges;
+            float2 horizontalEdges = ACS_Globals.HorizontalEdges;
             int spawnedLargeAsterois = ACS_Globals.SpawnedLargeAsteroids;
 
             Entities.ForEach((ref ACS_GameData gameData) =>
@@ -38,7 +41,7 @@ namespace Assets.ACS.Scripts.Systems
                 if (spawnedLargeAsterois < maxAsteroidsOnScreen)
                 {
                     Entity newAsteroid = EntityManager.Instantiate(gameData.LargeAsteroidPrefab);
-                    UnityEngine.Debug.Log($"Spawning new large asteroid so we keep them at {maxAsteroidsOnScreen}");
+                    // UnityEngine.Debug.Log($"Spawning new large asteroid so we keep them at {maxAsteroidsOnScreen}");
 
                     // Get asteroid data
                     ComponentDataFromEntity<ACS_AsteroidData> asteroidDataFromEntity = GetComponentDataFromEntity<ACS_AsteroidData>(true);
@@ -65,5 +68,7 @@ namespace Assets.ACS.Scripts.Systems
 
             ACS_Globals.SpawnedLargeAsteroids = spawnedLargeAsterois;
         }
+
+        #endregion
     }
 }

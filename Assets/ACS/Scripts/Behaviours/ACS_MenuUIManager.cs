@@ -3,17 +3,19 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using UnityEngine.SceneManagement;
-
 namespace Assets.ACS.Scripts.Behaviours
 {
+    using UnityEngine.SceneManagement;
+
     public class ACS_MenuUIManager : ACS_MonoBehaviour
     {
+        #region Methods
 
         public void StartGame()
         {
             SceneManager.LoadScene("ACS_Game");
         }
 
+        #endregion
     }
 }

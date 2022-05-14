@@ -3,22 +3,26 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using Unity.Jobs;
-using Unity.Entities;
-using Assets.ACS.Scripts.DataComponents;
-using Assets.ACS.Scripts.Utils;
-using Assets.ACS.Scripts.Behaviours;
-
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.Behaviours;
+    using Assets.ACS.Scripts.DataComponents;
+    using Assets.ACS.Scripts.Utils;
+    using Unity.Entities;
+    using Unity.Jobs;
 
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public partial class ACS_UISystem : SystemBase
     {
+        #region Fields
+
+        private Entity gameEntity;
 
         private Entity shipEntity;
-        private Entity gameEntity;
-        private ACS_ShipData shipData;
+
+        #endregion
+
+        #region Methods
 
         protected override void OnCreate()
         {
@@ -54,5 +58,7 @@ namespace Assets.ACS.Scripts.Systems
                 uiData.Health.text = shipData.Health.ToString();
             }).WithoutBurst().Run();
         }
+
+        #endregion
     }
 }

@@ -3,35 +3,53 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using Unity.Entities;
-
 namespace Assets.ACS.Scripts.DataComponents
 {
+    using Unity.Entities;
 
     [GenerateAuthoringComponent]
     public struct ACS_ShipData : IComponentData
     {
-        public float Health;
-        public float maxSpeed;
+        #region Fields
+
         public float acceleration;
-        public float rotationAcceleration;
+
+        public bool HasTripleShoot;
+
+        public float Health;
+
+        public float InvulnerabilityDuration;
+
+        public bool IsInvulnerable;
+
         public float maxAngularSpeed;
 
-        public Entity Projectile;
-        public float RateOfFire;
-        public bool IsInvulnerable;
-        public int Score;
-        public bool HasTripleShoot;
         public float MaxHealth;
-        public float InvulnerabilityDuration;
+
+        public float maxSpeed;
+
+        public Entity Projectile;
+
+        public float RateOfFire;
+
+        public float rotationAcceleration;
+
+        public int Score;
+
         public float TimeSinceInvulnerable;
-        public bool IsDestroyed
-        {
-            get
-            {
-                return Health <= 0;
-            }
-        }
+
+        public float TimeSinceTripleShoot;
+
+        public float TripleShootDuration;
+
+        public Entity ShieldEffect;
+
+        public bool IsShieldOn;
+
+        #endregion
+
+        #region Properties
+
         public bool HasInvulnerabilityExpired
         {
             get
@@ -40,5 +58,22 @@ namespace Assets.ACS.Scripts.DataComponents
             }
         }
 
+        public bool HasTripleShootExpired
+        {
+            get
+            {
+                return TimeSinceTripleShoot >= TripleShootDuration;
+            }
+        }
+
+        public bool IsDestroyed
+        {
+            get
+            {
+                return Health <= 0;
+            }
+        }
+
+        #endregion
     }
 }

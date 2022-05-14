@@ -3,22 +3,29 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using UnityEngine;
-using Assets.ACS.Scripts.DataComponents;
-using Assets.ACS.Scripts.Utils;
-using UnityEngine.UI;
-using Unity.Entities;
-using UnityEngine.SceneManagement;
-
 namespace Assets.ACS.Scripts.Behaviours
 {
+    using Assets.ACS.Scripts.DataComponents;
+    using Assets.ACS.Scripts.Utils;
+    using Unity.Entities;
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
+    using UnityEngine.UI;
+
     public class ACS_UIManager : ACS_MonoBehaviour
     {
+        #region Fields
 
         public RectTransform EndGamePanel;
+
         public Text Score;
 
         private static ACS_UIManager _Instance;
+
+        #endregion
+
+        #region Properties
+
         public static ACS_UIManager Instance
         {
             get
@@ -30,16 +37,20 @@ namespace Assets.ACS.Scripts.Behaviours
             }
         }
 
+        #endregion
+
+        #region Methods
+
         public void Awake()
         {
             EndGamePanel.gameObject.SetActive(false);
             ACS_Globals.HasGameStarted = true;
         }
 
-        public void ShowGameEndScreen(string score)
+        public void MainMenu()
         {
-            EndGamePanel.gameObject.SetActive(true);
-            Score.text = score;
+            ClearScene();
+            SceneManager.LoadScene("ACS_Menu");
         }
 
         public void Restart()
@@ -48,11 +59,12 @@ namespace Assets.ACS.Scripts.Behaviours
             SceneManager.LoadScene("ACS_Game");
         }
 
-        public void MainMenu()
+        public void ShowGameEndScreen(string score)
         {
-            ClearScene();
-            SceneManager.LoadScene("ACS_Menu");
+            EndGamePanel.gameObject.SetActive(true);
+            Score.text = score;
         }
+
         private void ClearScene()
         {
             ACS_Globals.HasGameStarted = false;
@@ -64,5 +76,6 @@ namespace Assets.ACS.Scripts.Behaviours
             DefaultWorldInitialization.Initialize("Default World", false);
         }
 
+        #endregion
     }
 }

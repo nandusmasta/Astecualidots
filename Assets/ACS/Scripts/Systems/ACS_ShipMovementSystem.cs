@@ -3,20 +3,25 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using Unity.Jobs;
-using Unity.Entities;
-using Assets.ACS.Scripts.DataComponents;
-using Assets.ACS.Scripts.Utils;
-using Unity.Transforms;
-using Unity.Mathematics;
-using Unity.Physics;
-
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.DataComponents;
+    using Assets.ACS.Scripts.Utils;
+    using Unity.Entities;
+    using Unity.Jobs;
+    using Unity.Mathematics;
+    using Unity.Physics;
+    using Unity.Transforms;
+
     public partial class ACS_ShipMovementSystem : SystemBase
     {
+        #region Fields
 
-        BeginInitializationEntityCommandBufferSystem ecbSystem;
+        internal BeginInitializationEntityCommandBufferSystem ecbSystem;
+
+        #endregion
+
+        #region Methods
 
         protected override void OnStartRunning()
         {
@@ -29,8 +34,8 @@ namespace Assets.ACS.Scripts.Systems
         {
             float deltaTime = Time.DeltaTime;
             float3 rotationAxis = new float3(0f, 0f, 1f);
-            float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
-            float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
+            float2 verticalEdges = ACS_Globals.VerticalEdges;
+            float2 horizontalEdges = ACS_Globals.HorizontalEdges;
             EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
 
             Entities.ForEach((ref PhysicsVelocity physicsVelocity, ref Rotation rotation, ref Translation translation, ref ACS_ShipMovementData shipMovementData,
@@ -54,7 +59,7 @@ namespace Assets.ACS.Scripts.Systems
                 {
                     translation.Value.z = verticalEdges.x + offset;
                 }
-                else 
+                else
                 {
                     if (translation.Value.z < verticalEdges.x)
                     {
@@ -87,5 +92,6 @@ namespace Assets.ACS.Scripts.Systems
             CompleteDependency();
         }
 
+        #endregion
     }
 }

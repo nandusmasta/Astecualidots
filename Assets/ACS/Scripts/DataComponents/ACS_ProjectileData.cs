@@ -3,18 +3,26 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using Unity.Entities;
-
 namespace Assets.ACS.Scripts.DataComponents
 {
+    using Unity.Entities;
+
     [GenerateAuthoringComponent]
     public struct ACS_ProjectileData : IComponentData
     {
+        #region Fields
+
+        public int Damage;
 
         public float Speed;
-        public int Damage;
-        public float TimeToLive;
+
         public float TimeSinceFired;
+
+        public float TimeToLive;
+
+        #endregion
+
+        #region Properties
 
         public bool IsExpired
         {
@@ -24,5 +32,6 @@ namespace Assets.ACS.Scripts.DataComponents
             }
         }
 
+        #endregion
     }
 }

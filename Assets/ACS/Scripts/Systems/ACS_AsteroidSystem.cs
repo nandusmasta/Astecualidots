@@ -3,22 +3,29 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using Unity.Entities;
-using Assets.ACS.Scripts.DataComponents;
-using Assets.ACS.Scripts.Utils;
-using Unity.Transforms;
-using Unity.Mathematics;
-using Unity.Physics;
-using Unity.Collections;
-
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.DataComponents;
+    using Assets.ACS.Scripts.Utils;
+    using Unity.Collections;
+    using Unity.Entities;
+    using Unity.Mathematics;
+    using Unity.Physics;
+    using Unity.Transforms;
+
     public partial class ACS_AsteroidSystem : SystemBase
     {
+        #region Fields
 
         private BeginInitializationEntityCommandBufferSystem ecbSystem;
+
         private Entity gameDataEntity;
+
         private Entity shipEntity;
+
+        #endregion
+
+        #region Methods
 
         protected override void OnStartRunning()
         {
@@ -41,12 +48,12 @@ namespace Assets.ACS.Scripts.Systems
                 return;
             }
 
-            float2 verticalEdges = ACS_GameManager.Instance.VerticalEdges;
-            float2 horizontalEdges = ACS_GameManager.Instance.HorizontalEdges;
+            float2 verticalEdges = ACS_Globals.VerticalEdges;
+            float2 horizontalEdges = ACS_Globals.HorizontalEdges;
             EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
             Unity.Mathematics.Random random = new Unity.Mathematics.Random(56);
 
-            Entities.WithoutBurst().ForEach((ref Translation translation, ref PhysicsVelocity physicsVelocity, ref ACS_AsteroidData asteroidData,in Rotation rotation, in Entity entity) =>
+            Entities.WithoutBurst().ForEach((ref Translation translation, ref PhysicsVelocity physicsVelocity, ref ACS_AsteroidData asteroidData, in Rotation rotation, in Entity entity) =>
             {
 
                 // Keep the asteroid  within the screen boundaries
@@ -142,5 +149,7 @@ namespace Assets.ACS.Scripts.Systems
 
             CompleteDependency();
         }
+
+        #endregion
     }
 }

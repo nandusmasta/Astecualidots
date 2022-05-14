@@ -3,28 +3,13 @@
  * Author: Fernando Rey. May 2022.
 */
 
-using Unity.Mathematics;
-using Unity.Transforms;
-
 namespace Assets.ACS.Scripts.Utils
 {
+    using Unity.Mathematics;
+
     public static class ACS_Utils
     {
-
-        public static float GetRandomFloat()
-        {
-            return UnityEngine.Random.Range(float.MinValue, float.MaxValue);
-        }
-
-        public static float GetRandomFloat(float min, float max)
-        {
-            return UnityEngine.Random.Range(min, max);
-        }
-
-        public static int GetRandomInt(int min, int max)
-        {
-            return UnityEngine.Random.Range(min, max);
-        }
+        #region Methods
 
         public static float3 ClampFloat3(float3 value, float normalizeLimit)
         {
@@ -43,5 +28,21 @@ namespace Assets.ACS.Scripts.Utils
             return value;
         }
 
+        public static float GetRandomFloat()
+        {
+            return UnityEngine.Random.Range(float.MinValue, float.MaxValue);
+        }
+
+        public static float GetRandomFloat(float min, float max)
+        {
+            return UnityEngine.Random.Range(min, max);
+        }
+
+        public static int GetRandomInt(int min, int max)
+        {
+            return UnityEngine.Random.Range(min, max);
+        }
+
+        #endregion
     }
 }

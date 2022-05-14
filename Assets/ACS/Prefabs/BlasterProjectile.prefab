@@ -4906,10 +4906,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6dde1369453b81468072a8f2e670cff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 150
   Damage: 100
-  TimeToLive: 2
+  Speed: 150
   TimeSinceFired: 0
+  TimeToLive: 2
 --- !u!114 &1973490094519157109
 MonoBehaviour:
   m_ObjectHideFlags: 0

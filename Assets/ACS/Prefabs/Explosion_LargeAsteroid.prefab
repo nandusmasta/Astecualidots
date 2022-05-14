@@ -9618,6 +9618,7 @@ GameObject:
   - component: {fileID: 3925421406800886518}
   - component: {fileID: 3925421406812580138}
   - component: {fileID: 5627916873415014284}
+  - component: {fileID: 1167451933300122445}
   m_Layer: 0
   m_Name: Explosion_LargeAsteroid
   m_TagString: Untagged
@@ -14498,3 +14499,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
+--- !u!114 &1167451933300122445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3925421406806573614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 351e07762ed383b4f81d36044685df3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeSinceFired: 0
+  TimeToLive: 2
