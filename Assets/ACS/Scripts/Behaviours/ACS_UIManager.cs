@@ -20,7 +20,19 @@ namespace Assets.ACS.Scripts.Behaviours
 
         public Text Score;
 
+        public Text Timer;
+
+        public Text TimeTaken;
+
         private static ACS_UIManager _Instance;
+
+        private float secondsSinceStart;
+
+        public GameObject FastShip;
+
+        public GameObject StandardShip;
+
+        public GameObject HeavyShip;
 
         #endregion
 
@@ -44,7 +56,13 @@ namespace Assets.ACS.Scripts.Behaviours
         public void Awake()
         {
             EndGamePanel.gameObject.SetActive(false);
-            ACS_Globals.HasGameStarted = true;
+            switch (ACS_Globals.ShipTypeTofly)
+            {
+                case ACS_Globals.ShipType.Fast: FastShip.SetActive(true); break;
+                case ACS_Globals.ShipType.Heavy: HeavyShip.SetActive(true); break;
+                case ACS_Globals.ShipType.Standard: StandardShip.SetActive(true); break;
+            }
+            ACS_Globals.IsPlayerPlaying = true;
         }
 
         public void MainMenu()
@@ -61,19 +79,34 @@ namespace Assets.ACS.Scripts.Behaviours
 
         public void ShowGameEndScreen(string score)
         {
+            ACS_Globals.IsPlayerPlaying = false;
             EndGamePanel.gameObject.SetActive(true);
             Score.text = score;
+            TimeTaken.text = Timer.text;
+        }
+
+        public void Update()
+        {
+            if (!ACS_Globals.IsPlayerPlaying) return;
+            secondsSinceStart += Time.deltaTime;
+            Timer.text = ACS_Utils.FormatTime(secondsSinceStart);
         }
 
         private void ClearScene()
         {
-            ACS_Globals.HasGameStarted = false;
-            ACS_Globals.SpawnedLargeAsteroids = 0;
             EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             EntityQuery asteroidEntities = entityManager.CreateEntityQuery(typeof(ACS_AsteroidData), typeof(Collider));
             entityManager.DestroyEntity(asteroidEntities);
+            EntityQuery powerUpEntities = entityManager.CreateEntityQuery(typeof(ACS_PowerUpData), typeof(Collider));
+            entityManager.DestroyEntity(powerUpEntities);
+            EntityQuery particleSystemRendererEntities = entityManager.CreateEntityQuery(typeof(ParticleSystemRenderer));
+            entityManager.DestroyEntity(particleSystemRendererEntities);
+            EntityQuery enemiesEntities = entityManager.CreateEntityQuery(typeof(ACS_EnemyData), typeof(Collider));
+            entityManager.DestroyEntity(enemiesEntities);
             ScriptBehaviourUpdateOrder.RemoveWorldFromCurrentPlayerLoop(World.DefaultGameObjectInjectionWorld);
             DefaultWorldInitialization.Initialize("Default World", false);
+            ACS_Globals.IsPlayerPlaying = false;
+            ACS_Globals.SpawnedLargeAsteroids = 0;
         }
 
         #endregion

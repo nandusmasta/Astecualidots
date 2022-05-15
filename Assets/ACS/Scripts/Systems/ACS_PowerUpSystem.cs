@@ -5,6 +5,7 @@
 
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.Behaviours;
     using Assets.ACS.Scripts.DataComponents;
     using Assets.ACS.Scripts.Utils;
     using Unity.Entities;
@@ -69,8 +70,18 @@ namespace Assets.ACS.Scripts.Systems
                     // Makre sure no funny physics mess with the z plane
                     if (translation.Value.y != 0)
                         translation.Value.y = 0;
+
+                    // Removed picked up power up
+                    if (powerUpData.PickedUp)
+                    {
+                        EntityManager.DestroyEntity(powerUp);
+
+                        // Play SFX
+                        ACS_GameAudioManager.Instance.PlayPowerUpPickupSFX();
+                    }
+
                 }
-            }).Schedule();
+            }).WithStructuralChanges().Run();
         }
 
         #endregion

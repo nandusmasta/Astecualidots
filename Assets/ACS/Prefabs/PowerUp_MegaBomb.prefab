@@ -14613,3 +14613,4 @@ MonoBehaviour:
   TimeSinceSpawned: 0
   TimeToLive: 15
   type: 1
+  PickedUp: 0

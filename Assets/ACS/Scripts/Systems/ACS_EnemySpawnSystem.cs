@@ -40,7 +40,7 @@ namespace Assets.ACS.Scripts.Systems
 
         protected override void OnUpdate()
         {
-            if (!ACS_Globals.HasGameStarted) return;
+            if (!ACS_Globals.IsPlayerPlaying) return;
 
             if (gameDataEntity == Entity.Null)
             {

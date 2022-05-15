@@ -9666,6 +9666,7 @@ MonoBehaviour:
   TimeSinceSpawned: 0
   TimeToLive: 15
   type: 3
+  PickedUp: 0
 --- !u!114 &7500951474281693660
 MonoBehaviour:
   m_ObjectHideFlags: 0

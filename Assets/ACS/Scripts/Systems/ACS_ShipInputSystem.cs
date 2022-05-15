@@ -5,6 +5,7 @@
 
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.Behaviours;
     using Assets.ACS.Scripts.DataComponents;
     using Assets.ACS.Scripts.Utils;
     using Unity.Entities;
@@ -30,12 +31,12 @@ namespace Assets.ACS.Scripts.Systems
 
         protected override void OnUpdate()
         {
-            if (!ACS_Globals.HasGameStarted) return;
+            if (!ACS_Globals.IsPlayerPlaying) return;
             float deltaTime = Time.DeltaTime;
             timeSinceLastShoot += deltaTime;
 
-            Entities.WithStructuralChanges().ForEach((ref ACS_ShipMovementData shipMovementData, ref ACS_ShipData shipData,
-                in ACS_ShipInputData shipInputData, in LocalToWorld shipTransform, in Rotation shipRotation) =>
+            Entities.ForEach((ref ACS_ShipMovementData shipMovementData, ref ACS_ShipData shipData,
+                in ACS_ShipInputData shipInputData, in LocalToWorld shipTransform, in Rotation shipRotation, in Translation shipTranslation) =>
             {
                 // Facing
                 if (Input.GetKey(shipInputData.turnLeftKey))
@@ -90,6 +91,9 @@ namespace Assets.ACS.Scripts.Systems
                         SetComponent(rigthProjectile, rigthProjectileTranslation);
                         SetComponent(rigthProjectile, rigthProjectilePhysicsVelocity);
                     }
+
+                    // Play fire effect
+                    ACS_GameAudioManager.Instance.PlayBlasterFiredSFX(false);
                 }
 
                 // Invulnerability
@@ -124,7 +128,20 @@ namespace Assets.ACS.Scripts.Systems
                         shipData.TimeSinceTripleShoot = 0f;
                     }
                 }
-            }).Run();
+
+                // Spawn the explosion and destroy the entity
+                if (shipData.IsDestroyed && shipData.HasExplosion)
+                {
+                    Entity explosion = EntityManager.Instantiate(shipData.explosion);
+                    EntityManager.SetComponentData<Translation>(explosion, shipTranslation);
+
+                    // Play SFX
+                    ACS_GameAudioManager.Instance.PlayEnemyExplosionSFX();
+                }
+
+            }).WithStructuralChanges().Run();
+
+            CompleteDependency();
         }
 
         #endregion

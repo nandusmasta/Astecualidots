@@ -5,6 +5,7 @@
 
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.Behaviours;
     using Assets.ACS.Scripts.DataComponents;
     using Assets.ACS.Scripts.Utils;
     using Unity.Entities;
@@ -78,7 +79,7 @@ namespace Assets.ACS.Scripts.Systems
                 rotation.Value.value.x = 0f;
                 rotation.Value.value.z = 0f;
 
-                if (!ACS_Globals.HasGameStarted) return;
+                if (!ACS_Globals.IsPlayerPlaying) return;
 
                 enemyData.TimeSinceLastShot += deltaTime;
                 if (!enemyData.IsReloading && EntityManager.Exists(shipEntity))
@@ -96,6 +97,9 @@ namespace Assets.ACS.Scripts.Systems
                     EntityManager.SetComponentData(newProjectile, newProjectileTranslation);
                     EntityManager.SetComponentData(newProjectile, newProjectilePhysicsVelocity);
                     enemyData.TimeSinceLastShot = 0f;
+
+                    // Play fire effect
+                    ACS_GameAudioManager.Instance.PlayEnemyBlasterFiredSFX(false);
                 }
 
                 // Destroy the enemy if it's supposed to
@@ -106,6 +110,9 @@ namespace Assets.ACS.Scripts.Systems
                     {
                         Entity explosion = entityCommandBuffer.Instantiate(enemyData.explosion);
                         entityCommandBuffer.SetComponent<Translation>(explosion, EntityManager.GetComponentData<Translation>(enemy));
+
+                        // Play SFX
+                        ACS_GameAudioManager.Instance.PlayEnemyExplosionSFX();
                     }
                     entityCommandBuffer.DestroyEntity(enemy);
 

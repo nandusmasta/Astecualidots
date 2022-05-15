@@ -5,6 +5,7 @@
 
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.Behaviours;
     using Assets.ACS.Scripts.DataComponents;
     using Assets.ACS.Scripts.Utils;
     using Unity.Collections;
@@ -134,11 +135,17 @@ namespace Assets.ACS.Scripts.Systems
                     if (powerUpDataCDFE.HasComponent(collisionEvent.EntityB))
                     powerUp = collisionEvent.EntityB;
 
+                #region Projectile Collisions
+
                 // Projectile collisions
                 if (projectile != Entity.Null)
                 {
                     ACS_ProjectileData projectileData;
                     projectileDataCDFE.TryGetComponent(projectile, out projectileData);
+
+                    // Ignore projectiles just fired
+                    if (projectileData.TimeSinceFired <= 0.025f)
+                        return;
 
                     // Projectile on asteroid collision
                     if (asteroid != Entity.Null)
@@ -176,6 +183,10 @@ namespace Assets.ACS.Scripts.Systems
                     // Destroy projectile
                     entityCommandBuffer.DestroyEntity(projectile);
                 }
+
+                #endregion
+
+                #region Ship Collisions
 
                 // Ship collisions
                 if (ship != Entity.Null)
@@ -228,7 +239,8 @@ namespace Assets.ACS.Scripts.Systems
                                 shipData.HasTripleShoot = true;
                                 break;
                         }
-                        entityCommandBuffer.DestroyEntity(powerUp);
+                        powerUpData.PickedUp = true;
+                        entityCommandBuffer.SetComponent(powerUp, powerUpData);
                     }
 
                     // Register ship damage
@@ -244,6 +256,8 @@ namespace Assets.ACS.Scripts.Systems
                         }
                     }
                 }
+
+                #endregion
 
             }
 

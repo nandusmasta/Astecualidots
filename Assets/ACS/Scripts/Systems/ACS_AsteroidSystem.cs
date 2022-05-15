@@ -5,6 +5,7 @@
 
 namespace Assets.ACS.Scripts.Systems
 {
+    using Assets.ACS.Scripts.Behaviours;
     using Assets.ACS.Scripts.DataComponents;
     using Assets.ACS.Scripts.Utils;
     using Unity.Collections;
@@ -40,7 +41,7 @@ namespace Assets.ACS.Scripts.Systems
 
         protected override void OnUpdate()
         {
-            if (!ACS_Globals.HasGameStarted) return;
+            if (!ACS_Globals.IsPlayerPlaying) return;
 
             if (shipEntity == Entity.Null)
             {
@@ -53,7 +54,7 @@ namespace Assets.ACS.Scripts.Systems
             EntityCommandBuffer entityCommandBuffer = ecbSystem.CreateCommandBuffer();
             Unity.Mathematics.Random random = new Unity.Mathematics.Random(56);
 
-            Entities.WithoutBurst().ForEach((ref Translation translation, ref PhysicsVelocity physicsVelocity, ref ACS_AsteroidData asteroidData, in Rotation rotation, in Entity entity) =>
+            Entities.ForEach((ref Translation translation, ref PhysicsVelocity physicsVelocity, ref ACS_AsteroidData asteroidData, in Rotation rotation, in Entity entity) =>
             {
 
                 // Keep the asteroid  within the screen boundaries
@@ -99,6 +100,14 @@ namespace Assets.ACS.Scripts.Systems
                     {
                         Entity explosion = entityCommandBuffer.Instantiate(asteroidData.explosion);
                         entityCommandBuffer.SetComponent<Translation>(explosion, EntityManager.GetComponentData<Translation>(entity));
+
+                        // Play explosion SFX
+                        switch (asteroidData.type)
+                        {
+                            case ACS_AsteroidData.AsteroidType.Large: ACS_GameAudioManager.Instance.PlayLargeAsteroidExplosionSFX(true, 7); break;
+                            case ACS_AsteroidData.AsteroidType.Medium: ACS_GameAudioManager.Instance.PlayMediumAsteroidExplosionSFX(true, 5); break;
+                            case ACS_AsteroidData.AsteroidType.Small: ACS_GameAudioManager.Instance.PlaySmallAsteroidExplosionSFX(true, 3); break;
+                        }
                     }
                     entityCommandBuffer.DestroyEntity(entity);
 
@@ -143,7 +152,7 @@ namespace Assets.ACS.Scripts.Systems
                     }
                 }
 
-            }).Run();
+            }).WithoutBurst().Run();
 
             ACS_Globals.HasFiredMegaBomb = false;
 

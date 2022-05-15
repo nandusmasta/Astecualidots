@@ -21,7 +21,7 @@ Material:
     m_TexEnvs: []
     m_Floats:
     - _AlphaPow: 1.36
-    - _ClosestParticleDistance: 1000
+    - _ClosestParticleDistance: 10
     - _Core1Pow: 1.99
     - _Core1Size: 0.029
     - _Core2Pow: 0.22
@@ -29,13 +29,13 @@ Material:
     - _CoreColorMult: 0.13
     - _DotSizeMultiplier: 1
     - _FarthestDotAlpha: 0.127
-    - _FarthestParticleDistance: 2000
+    - _FarthestParticleDistance: 600
     - _Glow1Pow: 0.21
     - _Glow1Size: 0.19
     - _Glow2Pow: 0.16
     - _Glow2Size: 0.41
     - _GlowColorMult: 1.18
-    - _ParticleSize: 100
+    - _ParticleSize: 20
     - _ScintillationSpeed: 0.5
     - _ScintillationStrength: 0.5
     m_Colors: []

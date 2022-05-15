@@ -31,8 +31,6 @@ namespace Assets.ACS.Scripts.Systems
 
         protected override void OnUpdate()
         {
-            if (!ACS_Globals.HasGameStarted) return;
-
             if (shipEntity == Entity.Null)
             {
                 shipEntity = GetSingletonEntity<ACS_ShipData>();

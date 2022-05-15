@@ -18,6 +18,8 @@ namespace Assets.ACS.Scripts.DataComponents
 
         public PowerUpType type;
 
+        public bool PickedUp;
+
         #endregion
 
         #region Enums

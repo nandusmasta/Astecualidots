@@ -29,7 +29,7 @@ namespace Assets.ACS.Scripts.Systems
 
         protected override void OnUpdate()
         {
-            if (!ACS_Globals.HasGameStarted) return;
+            if (!ACS_Globals.IsPlayerPlaying) return;
 
             int maxAsteroidsOnScreen = ACS_Globals.MaxAsteroidsOnScreen;
             float2 verticalEdges = ACS_Globals.VerticalEdges;

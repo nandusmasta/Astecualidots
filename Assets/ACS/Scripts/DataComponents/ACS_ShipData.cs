@@ -46,6 +46,8 @@ namespace Assets.ACS.Scripts.DataComponents
 
         public bool IsShieldOn;
 
+        public Entity explosion;
+
         #endregion
 
         #region Properties
@@ -71,6 +73,14 @@ namespace Assets.ACS.Scripts.DataComponents
             get
             {
                 return Health <= 0;
+            }
+        }
+
+        public bool HasExplosion
+        {
+            get
+            {
+                return explosion != Entity.Null;
             }
         }
 
